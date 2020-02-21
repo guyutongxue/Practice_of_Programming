@@ -37,3 +37,6 @@
 # Archives (submmitted to course.pku.edu.cn)
 *.zip
 *.7z
+
+# Temporary File
+temp.cpp

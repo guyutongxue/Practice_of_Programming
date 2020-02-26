@@ -4,7 +4,7 @@ class Apple {
 public:
     static int nTotalNumber;
     Apple() {
-        nTotalNumber == 5 || nTotalNumber++;
+        nTotalNumber++;
     }
     ~Apple() {
         nTotalNumber--;
@@ -20,7 +20,7 @@ Apple Fun(const Apple& a) {
 }
 int main() {
     Apple* p = new Apple[4];
-    Fun(p[2]);
+    Fun(p[2]); // Here, constructor not called (because it's copy init), but destructor called
     Apple p1, p2;
     Apple::PrintTotal();
     delete[] p;

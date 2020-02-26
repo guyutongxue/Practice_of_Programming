@@ -73,9 +73,9 @@ private:
     bool stopped;
 
 public:
-    Warrier* (*genRecall)(int);
-    Headquarter(const std::string& name = "", int lifeUnit = 0, Warrier* (*recall)(int) = nullptr)
-        : name(name), lifeUnit(lifeUnit), stopped(false), genRecall(recall) {}
+    Warrier* (*genCallback)(int);
+    Headquarter(const std::string& name = "", int lifeUnit = 0, Warrier* (*callback)(int) = nullptr)
+        : name(name), lifeUnit(lifeUnit), stopped(false), genCallback(callback) {}
     ~Headquarter() {
         for (auto i : warrierList) {
             delete i;
@@ -135,7 +135,7 @@ void execute(Headquarter& head, int& seq, const int time) {
         return;
     Warrier* next;
     int trytime = 0;
-    while (next = head.genRecall(seq % 5), next->getLifeUnit() > head.getLifeUnit()) {
+    while (next = head.genCallback(seq % 5), next->getLifeUnit() > head.getLifeUnit()) {
         delete next;
         trytime++;
         seq++;

@@ -96,6 +96,13 @@ public:
     void stop() {
         stopped = true;
     }
+    
+    /**
+     * @brief Add a warrier to the headquarter.
+     * 
+     * @param warrier The warrier to be added.
+     * @return int The total number of current type of warrier.
+     */
     int addWarrier(const Warrier* warrier) {
         warrierList.push_back(warrier);
         lifeUnit -= warrier->getLifeUnit();
@@ -168,7 +175,6 @@ int main() {
         int time = 0, redseq = 0, blueseq = 0;
         std::cout << "Case:" << j << std::endl;
         while (!red.isStop() || !blue.isStop()) {
-            Warrier* next;
             execute(red, redseq, time);
             execute(blue, blueseq, time);
             time++;

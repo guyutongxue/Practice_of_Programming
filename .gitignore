@@ -39,4 +39,5 @@
 *.7z
 
 # Temporary File
-temp.cpp
+temp.*
+temp/

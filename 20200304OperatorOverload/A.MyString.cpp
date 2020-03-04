@@ -20,16 +20,18 @@ public:
     MyString(const MyString& s) {
         if (s.p) {
             p = new char[strlen(s.p) + 1];
-            strcpy(p,s.p);
+            strcpy(p, s.p);
         } else
             p = nullptr;
     }
     MyString& operator=(const MyString& s) {
+        if (p == s.p)
+            return *this;
         if (p)
             delete[] p;
         if (s.p) {
             p = new char[strlen(s.p) + 1];
-            strcpy(p,s.p);
+            strcpy(p, s.p);
         } else
             p = nullptr;
         return *this;
@@ -39,7 +41,7 @@ public:
             delete[] p;
         if (s) {
             p = new char[strlen(s) + 1];
-            strcpy(p,s);
+            strcpy(p, s);
         } else
             p = nullptr;
     }

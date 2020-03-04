@@ -19,6 +19,8 @@ public:
         memcpy(p, s.p, sizeof(int) * x * y);
     }
     Array2& operator=(const Array2& s) {
+        if (p == s.p)
+            return *this;
         x = s.x;
         y = s.y;
         if (p)

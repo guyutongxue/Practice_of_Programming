@@ -226,6 +226,7 @@ public:
     int getForce(int warrierForce) const override {
         return warrierForce * 3 / 10;
     }
+
     /**
      * @brief 覆盖基类的运算符重载。
      * 若同为 Arrow 比较，则已使用过的排在前面。
@@ -266,11 +267,13 @@ protected:
      * 会因受到自身或对方的伤害而降低。
      */
     int life;
+
     /**
      * @brief 是否会遭受到自己的武器伤害。
      * 若不会被自己的 Bomb 伤害，则标记为 true。
      */
     bool isProtected = false;
+
     // 保留属性，来自上一次题目
     // const int force;
 
@@ -557,12 +560,15 @@ public:
         life = initialLife[3];
         armamentList.push_back(generateArmament(number % 3));
     }
+
     const int getForce() const override {
         return initialForce[3];
     }
+
     const char* getName() const override {
         return "lion";
     }
+
     /**
      * @brief Lion 是否应当逃跑。
      * 当忠诚度不大于零时，应当逃跑。
@@ -630,12 +636,15 @@ public:
         ss << capture.size() << ' ' << capture.front()->getName();
         return ss.str();
     }
+
     const int getForce() const override {
         return initialForce[4];
     }
+
     const char* getName() const override {
         return "wolf";
     }
+
     const std::string getBornLog() const override {
         return "";
     }
@@ -1100,9 +1109,6 @@ public:
         // 仅当双方武士见面时执行
         if (!redWarrier || !blueWarrier)
             return;
-        // 若 Iceman 已经死亡（前进消耗），则无需战斗
-        if (checkResult())
-            return;
         // 双方排列武器
         redWarrier->sortArmaments();
         blueWarrier->sortArmaments();
@@ -1137,6 +1143,7 @@ public:
                               "and ", blueWarrier->getLife(), " elements");
         }
     }
+
     /**
      * @brief 输出当前城市的前进信息。
      *
@@ -1228,6 +1235,7 @@ public:
         current->eastCity = nullptr;
         eastHead = current;
     }
+
     /**
      * @brief 向红方司令部城市添加一个武士。
      *
@@ -1309,6 +1317,7 @@ public:
             current = current->eastCity;
         }
     }
+    
     /**
      * @brief 地图类的析构函数。
      * 调用双向链表的释放。

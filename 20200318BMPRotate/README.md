@@ -4,11 +4,13 @@
 
 ## 代码说明
 
-使用纯 C 语言完成，仅限 Windows 平台上编译运行。编译指令：
+使用纯 C 语言完成。编译指令：
 ```
 gcc rotatebmp.c -o rotatebmp.exe -Wno-multichar 
 ```
 因为使用了 Windows.h 里的多字节字符，所以我选择关闭这个警告。
+
+关于头文件：我使用了 `bmp_util.h` 这个头文件，若为 Windows 系统则直接调用 `windows.h` 的内容；否则调用其余可能用到的声明。
 
 ## 使用
 

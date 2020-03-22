@@ -1,10 +1,7 @@
-#ifndef _WIN32
-#error This file can only be compiled under Windows.
-#endif
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-#include <windows.h>
+#include "bmp_util.h"
 
 const char* helpMessage =
     "Usage: %s <src-file.bmp> <dst-file.bmp> [/V]\n"

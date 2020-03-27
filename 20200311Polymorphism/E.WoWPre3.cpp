@@ -156,7 +156,7 @@ public:
     }
 
     /**
-     * @brief 使用 Bomb 武器攻击。
+     * @brief 使用武器攻击。
      *
      * @param force 使用者武力值。
      * @param enemy 被攻击对象。

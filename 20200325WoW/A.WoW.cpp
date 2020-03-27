@@ -1036,13 +1036,13 @@ Warrier* Headquarter::generateWarrier() {
 }
 
 void Headquarter::checkEscapedLion() {
-    for (auto i = warrierList.begin(); i != warrierList.end(); ++i) {
+    for (auto i = warrierList.begin(); i != warrierList.end();) {
         // 若为 Lion 且应当逃跑，则移出列表并令其消亡
         if (typeid(*(i->second)) == typeid(Lion) && dynamic_cast<Lion*>(i->second)->isEscaping()) {
             Broadcast::output(BroadcastType::LionEscape, name, " lion ", i->first, " ran away");
-            warrierList.erase(i);
-            break;
-        }
+            warrierList.erase(i++);
+        } else
+            i++;
     }
 }
 

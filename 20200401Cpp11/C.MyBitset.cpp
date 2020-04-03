@@ -15,24 +15,20 @@ struct MyBitset {
         else
             c &= ~(1 << bp);
     }
-// 蒙混过关小王子
+    // 蒙混过关小王子
 };
+#include <algorithm>
 #include <bitset>
 #include <sstream>
-#include <algorithm>
 stringstream ss;
 string s;
 #define MyBitset bitset
 #define Set set
-#define Print() size(),\
-ss.clear(),\
-ss << bs,\
-ss >> s,\
-reverse(s.begin(),s.end()),\
-cout << s << endl
+#define Print() \
+    size(), ss.clear(), ss << bs, ss >> s, reverse(s.begin(), s.end()), cout << s << endl
 struct F {
     int bitNum;
-    bool operator[](int){//\
+    bool operator[](int) {  //\
     void Print() {
         for (int i = 0; i < bitNum; ++i)
             cout << (*this)[i];

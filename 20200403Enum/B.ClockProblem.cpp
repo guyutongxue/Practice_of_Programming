@@ -41,16 +41,12 @@ function<void(Wall&)> action[10] = {
     [](Wall& wall) { wall.e++, wall.f++, wall.h++, wall.i++; },
 };
 
-// queue<Wall> q;
-
-// bool visited[4][4][4][4][4][4][4][4][4] = {};
-
 bool check(Wall& wall) {
     return wall.a == 0 && wall.b == 0 && wall.c == 0 && wall.d == 0 && wall.e == 0 && wall.f == 0 &&
            wall.g == 0 && wall.h == 0 && wall.i == 0;
 }
 
-int cnt[9]={};
+int cnt[9] = {};
 
 void dfs(int k, Wall wall) {
     if (k > 9) {
@@ -64,9 +60,9 @@ void dfs(int k, Wall wall) {
         }
         return;
     }
-    for(int i=0;i<=3;i++){
-        cnt[k]=i;
-        dfs(k+1,wall);
+    for (int i = 0; i <= 3; i++) {
+        cnt[k] = i;
+        dfs(k + 1, wall);
         action[k](wall);
     }
 }
@@ -75,5 +71,5 @@ int main() {
     ios::sync_with_stdio(false);
     Wall root;
     cin >> root.a >> root.b >> root.c >> root.d >> root.e >> root.f >> root.g >> root.h >> root.i;
-    dfs(1,root);
+    dfs(1, root);
 }

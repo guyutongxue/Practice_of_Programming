@@ -6,7 +6,7 @@ using namespace std;
 constexpr int&& INF = std::numeric_limits<int>::max();
 int a[120][1100];
 
-//状态转移方程：dp[i][j] = min(dp[i][j], dp[i-1][k]+q)
+// 状态转移方程：dp[i][j] = min(dp[i][j], dp[i-1][k]+q)
 // dp[i][j]表示前i组带宽为j的最小价格
 int main() {
     int n;
@@ -28,9 +28,9 @@ int main() {
                 if (i == 1) {
                     a[i][p] = min(a[1][p], q);
                 } else {
-                    //之所以从0遍历到1200：
-                    // 1.预估带宽最大到1200
-                    // 2.保证所有的带宽与对应的最小价格都被存到二维数组中,最后所求最小价格即为a[3][min带宽]
+                    // 之所以从0遍历到1200：
+                    // 1. 预估带宽最大到1200
+                    // 2. 保证所有的带宽与对应的最小价格都被存到二维数组中,最后所求最小价格即为a[3][min带宽]
                     for (int k = 0; k < 1100; k++) {
                         if (a[i - 1][k] != INF) {
                             if (k <= p)

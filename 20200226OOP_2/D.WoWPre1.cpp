@@ -8,7 +8,7 @@
 
 int lifetime[5] = {};
 
-class Warrier {
+class Warrior {
 public:
     virtual const int getLifeUnit() const {
         return 0;
@@ -16,10 +16,10 @@ public:
     virtual const char* getName() const {
         return "undefined";
     }
-    virtual ~Warrier(){};
+    virtual ~Warrior(){};
 };
 
-class Dragon : public Warrier {
+class Dragon : public Warrior {
 public:
     const int getLifeUnit() const {
         return lifetime[0];
@@ -28,7 +28,7 @@ public:
         return "dragon";
     }
 };
-class Ninja : public Warrier {
+class Ninja : public Warrior {
 public:
     const int getLifeUnit() const {
         return lifetime[1];
@@ -37,7 +37,7 @@ public:
         return "ninja";
     }
 };
-class Iceman : public Warrier {
+class Iceman : public Warrior {
 public:
     const int getLifeUnit() const {
         return lifetime[2];
@@ -46,7 +46,7 @@ public:
         return "iceman";
     }
 };
-class Lion : public Warrier {
+class Lion : public Warrior {
 public:
     const int getLifeUnit() const {
         return lifetime[3];
@@ -55,7 +55,7 @@ public:
         return "lion";
     }
 };
-class Wolf : public Warrier {
+class Wolf : public Warrior {
 public:
     const int getLifeUnit() const {
         return lifetime[4];
@@ -68,16 +68,16 @@ public:
 class Headquarter {
 private:
     std::string name;
-    std::vector<const Warrier*> warrierList;
+    std::vector<const Warrior*> warriorList;
     int lifeUnit;
     bool stopped;
 
 public:
-    Warrier* (*genCallback)(int);
-    Headquarter(const std::string& name = "", int lifeUnit = 0, Warrier* (*callback)(int) = nullptr)
+    Warrior* (*genCallback)(int);
+    Headquarter(const std::string& name = "", int lifeUnit = 0, Warrior* (*callback)(int) = nullptr)
         : name(name), lifeUnit(lifeUnit), stopped(false), genCallback(callback) {}
     ~Headquarter() {
-        for (auto i : warrierList) {
+        for (auto i : warriorList) {
             delete i;
         }
     }
@@ -88,7 +88,7 @@ public:
         return lifeUnit;
     }
     int getNum() const {
-        return warrierList.size();
+        return warriorList.size();
     }
     inline bool isStop() const {
         return stopped;
@@ -98,24 +98,24 @@ public:
     }
     
     /**
-     * @brief Add a warrier to the headquarter.
+     * @brief Add a warrior to the headquarter.
      * 
-     * @param warrier The warrier to be added.
-     * @return int The total number of current type of warrier.
+     * @param warrior The warrior to be added.
+     * @return int The total number of current type of warrior.
      */
-    int addWarrier(const Warrier* warrier) {
-        warrierList.push_back(warrier);
-        lifeUnit -= warrier->getLifeUnit();
+    int addWarrior(const Warrior* warrior) {
+        warriorList.push_back(warrior);
+        lifeUnit -= warrior->getLifeUnit();
         int num = 0;
-        for (auto i : warrierList) {
-            if (typeid(*warrier) == typeid(*i))
+        for (auto i : warriorList) {
+            if (typeid(*warrior) == typeid(*i))
                 num++;
         }
         return num;
     }
 };
 
-Warrier* generateRed(int mod) {
+Warrior* generateRed(int mod) {
     switch (mod) {
         case 0: return new Iceman;
         case 1: return new Lion;
@@ -126,7 +126,7 @@ Warrier* generateRed(int mod) {
     }
 }
 
-Warrier* generateBlue(int mod) {
+Warrior* generateBlue(int mod) {
     switch (mod) {
         case 0: return new Lion;
         case 1: return new Dragon;
@@ -140,7 +140,7 @@ Warrier* generateBlue(int mod) {
 void execute(Headquarter& head, int& seq, const int time) {
     if (head.isStop())
         return;
-    Warrier* next;
+    Warrior* next;
     int trytime = 0;
     while (next = head.genCallback(seq % 5), next->getLifeUnit() > head.getLifeUnit()) {
         delete next;
@@ -153,7 +153,7 @@ void execute(Headquarter& head, int& seq, const int time) {
             return;
         }
     }
-    int num = head.addWarrier(next);
+    int num = head.addWarrior(next);
     seq++;
     std::cout << std::setw(3) << std::setfill('0') << time << ' ' << head.getName() << ' '
               << next->getName() << ' ' << head.getNum() << " born with strength "

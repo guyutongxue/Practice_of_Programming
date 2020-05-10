@@ -39,7 +39,7 @@ public:
 
 Armament* generateArmament(int);
 
-class Warrier {
+class Warrior {
 private:
     int number;
 
@@ -55,17 +55,17 @@ public:
     const int getNumber() {
         return number;
     }
-    Warrier(int number) : number(number) {}
-    ~Warrier() {
+    Warrior(int number) : number(number) {}
+    ~Warrior() {
         for (auto& i : armamentList) {
             delete i;
         }
     }
 };
 
-class Dragon : public Warrier {
+class Dragon : public Warrior {
 public:
-    Dragon(int number, float morale) : Warrier(number) {
+    Dragon(int number, float morale) : Warrior(number) {
         armamentList.push_back(generateArmament(number % 3));
         this->morale = morale;
     }
@@ -82,9 +82,9 @@ public:
         return ss.str();
     }
 };
-class Ninja : public Warrier {
+class Ninja : public Warrior {
 public:
-    Ninja(int number) : Warrier(number) {
+    Ninja(int number) : Warrior(number) {
         armamentList.push_back(generateArmament(number % 3));
         armamentList.push_back(generateArmament((number + 1) % 3));
     }
@@ -101,9 +101,9 @@ public:
         return ss.str();
     }
 };
-class Iceman : public Warrier {
+class Iceman : public Warrior {
 public:
-    Iceman(int number) : Warrier(number) {
+    Iceman(int number) : Warrior(number) {
         armamentList.push_back(generateArmament(number % 3));
     }
     const int getLifeUnit() const override {
@@ -118,9 +118,9 @@ public:
         return ss.str();
     }
 };
-class Lion : public Warrier {
+class Lion : public Warrior {
 public:
-    Lion(int number, float loyalty) : Warrier(number) {
+    Lion(int number, float loyalty) : Warrior(number) {
         this->loyalty = loyalty;
     }
     const int getLifeUnit() const override {
@@ -135,9 +135,9 @@ public:
         return ss.str();
     }
 };
-class Wolf : public Warrier {
+class Wolf : public Warrior {
 public:
-    Wolf(int number) : Warrier(number) {}
+    Wolf(int number) : Warrior(number) {}
     const int getLifeUnit() const override {
         return lifetime[4];
     }
@@ -149,22 +149,22 @@ public:
     }
 };
 
-using WarrierDelegatePtr = Warrier* (*)(int, int, int);
+using WarriorDelegatePtr = Warrior* (*)(int, int, int);
 
 class Headquarter {
 private:
     std::string name;
-    std::vector<const Warrier*> warrierList;
+    std::vector<const Warrior*> warriorList;
     int lifeUnit;
     bool stopped;
 
 public:
-    WarrierDelegatePtr genCallback;
+    WarriorDelegatePtr genCallback;
     Headquarter(const std::string& name = "", int lifeUnit = 0,
-                WarrierDelegatePtr callback = nullptr)
+                WarriorDelegatePtr callback = nullptr)
         : name(name), lifeUnit(lifeUnit), stopped(false), genCallback(callback) {}
     ~Headquarter() {
-        for (auto& i : warrierList) {
+        for (auto& i : warriorList) {
             delete i;
         }
     }
@@ -175,7 +175,7 @@ public:
         return lifeUnit;
     }
     int getNum() const {
-        return warrierList.size();
+        return warriorList.size();
     }
     inline bool isStop() const {
         return stopped;
@@ -185,24 +185,24 @@ public:
     }
 
     /**
-     * @brief Add a warrier to the headquarter.
+     * @brief Add a warrior to the headquarter.
      *
-     * @param warrier The warrier to be added.
-     * @return int The total number of current type of warrier.
+     * @param warrior The warrior to be added.
+     * @return int The total number of current type of warrior.
      */
-    int addWarrier(const Warrier* warrier) {
-        warrierList.push_back(warrier);
-        lifeUnit -= warrier->getLifeUnit();
+    int addWarrior(const Warrior* warrior) {
+        warriorList.push_back(warrior);
+        lifeUnit -= warrior->getLifeUnit();
         int num = 0;
-        for (auto i : warrierList) {
-            if (typeid(*warrier) == typeid(*i))
+        for (auto i : warriorList) {
+            if (typeid(*warrior) == typeid(*i))
                 num++;
         }
         return num;
     }
 };
 
-Warrier* generateRed(int seq, int no, int lifeUnit) {
+Warrior* generateRed(int seq, int no, int lifeUnit) {
     switch (seq) {
         case 0: return new Iceman(no);
         case 1: return new Lion(no, lifeUnit - lifetime[3]);
@@ -213,7 +213,7 @@ Warrier* generateRed(int seq, int no, int lifeUnit) {
     return nullptr;
 }
 
-Warrier* generateBlue(int seq, int no, int lifeUnit) {
+Warrior* generateBlue(int seq, int no, int lifeUnit) {
     switch (seq) {
         case 0: return new Lion(no, lifeUnit - lifetime[3]);
         case 1: return new Dragon(no, 1.f * (lifeUnit - lifetime[0]) / lifetime[0]);
@@ -236,7 +236,7 @@ Armament* generateArmament(int no) {
 void execute(Headquarter& head, int& seq, const int time) {
     if (head.isStop())
         return;
-    Warrier* next;
+    Warrior* next;
     int trytime = 0;
     while (next = head.genCallback(seq % 5, head.getNum() + 1, head.getLifeUnit()),
            next->getLifeUnit() > head.getLifeUnit()) {
@@ -250,7 +250,7 @@ void execute(Headquarter& head, int& seq, const int time) {
             return;
         }
     }
-    int num = head.addWarrier(next);
+    int num = head.addWarrior(next);
     seq++;
     std::cout << std::setw(3) << std::setfill('0') << time << ' ' << head.getName() << ' '
               << next->getName() << ' ' << head.getNum() << " born with strength "

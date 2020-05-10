@@ -65,16 +65,16 @@ const int& INFTY = std::numeric_limits<int>::max();
  * 使用枚举值来标记分钟。
  */
 enum class BroadcastType : int {
-    WarrierBorn = 0,   /**< 武士被生成 */
+    WarriorBorn = 0,   /**< 武士被生成 */
     LionEscape = 5,    /**< Lion 逃跑 */
-    WarrierMarch = 10, /**< 武士前进（含占领） */
+    WarriorMarch = 10, /**< 武士前进（含占领） */
     // GenerateElements = 20,  /**< 城市生成生命元 */
     CollectElements = 30,   /**< 单个武士获取生命元 */
     ArrowShot = 35,         /**< Arrow 放出 */
     BombUsed = 38,          /**< 武士使用 Bomb*/
     Battle = 40,            /**< 武士战斗（进攻、反击、战死、欢呼等） */
     HeadquarterReport = 50, /**< 司令部报告 */
-    WarrierReport = 55      /**< 武士报告 */
+    WarriorReport = 55      /**< 武士报告 */
 };
 
 /**
@@ -165,7 +165,7 @@ public:
 int Broadcast::hour = 0;
 std::stringstream Broadcast::ss;
 
-class Warrier;
+class Warrior;
 
 /**
  * @brief 武器类。
@@ -228,7 +228,7 @@ public:
      * @param enemy 被攻击对象。
      * @return int 对使用者的伤害。
      */
-    virtual int attack(Warrier* enemy) = 0;
+    virtual int attack(Warrior* enemy) = 0;
 
     /**
      * @brief 获取武器名称。
@@ -248,7 +248,7 @@ public:
     Sword(int force) : Armament(0) {
         this->force = endurance = force;
     }
-    int attack(Warrier*) override;
+    int attack(Warrior*) override;
     const char* getName() const override {
         return "sword";
     }
@@ -264,7 +264,7 @@ public:
         endurance = 1;
         force = INFTY;
     }
-    int attack(Warrier*) override;
+    int attack(Warrior*) override;
     const char* getName() const override {
         return "bomb";
     }
@@ -280,7 +280,7 @@ public:
         endurance = 3;
         force = arrowForce;
     }
-    int attack(Warrier*) override;
+    int attack(Warrior*) override;
 
     const char* getName() const override {
         return "arrow";
@@ -293,7 +293,7 @@ class Headquarter;
  * @brief 武士类。
  * 所有武士的共同属性、方法记录于此。
  */
-class Warrier {
+class Warrior {
 private:
     /**
      * @brief 武士编号。
@@ -416,7 +416,7 @@ public:
      * @param owner 武士拥有者（司令部）。
      * @param force 武士的武力值。
      */
-    Warrier(int number, Headquarter* owner, int force)
+    Warrior(int number, Headquarter* owner, int force)
         : number(number), owner(owner), force(force) {}
 
     /**
@@ -424,7 +424,7 @@ public:
      *
      * @param enemy 敌人。
      */
-    virtual void attack(Warrier* enemy) {
+    virtual void attack(Warrior* enemy) {
         if (sword)
             sword->attack(enemy);
         enemy->loseLife(force);
@@ -436,7 +436,7 @@ public:
      *
      * @param enemy 敌人。
      */
-    void counterattack(Warrier* enemy) {
+    void counterattack(Warrior* enemy) {
         if (sword)
             sword->attack(enemy);
         enemy->loseLife(force / 2);
@@ -490,7 +490,7 @@ public:
      * @brief 武士析构函数。
      * 需要释放所有所持有的武器。
      */
-    ~Warrier() {
+    ~Warrior() {
         delete sword;
         delete bomb;
         delete arrow;
@@ -501,7 +501,7 @@ public:
  * @brief Dragon 武士类。
  * 士气值达到某条件时会欢呼。
  */
-class Dragon : public Warrier {
+class Dragon : public Warrior {
 private:
     /**
      * @brief Dragon 的士气值。
@@ -517,7 +517,7 @@ private:
 
 public:
     Dragon(int number, Headquarter* owner, double morale)
-        : Warrier(number, owner, initialForce[0]), morale(morale) {
+        : Warrior(number, owner, initialForce[0]), morale(morale) {
         life = initialLife[0];
         // 生成武器
         sword = number % 3 == 0 ? new Sword(force / 5) : nullptr;
@@ -581,9 +581,9 @@ public:
  * @brief Ninja 武士类。
  * 初始持有两把武器，且不会被自己伤害。
  */
-class Ninja : public Warrier {
+class Ninja : public Warrior {
 public:
-    Ninja(int number, Headquarter* owner) : Warrier(number, owner, initialForce[1]) {
+    Ninja(int number, Headquarter* owner) : Warrior(number, owner, initialForce[1]) {
         life = initialLife[1];
         // 生成武器，此处使用了“反”的方法
         sword = number % 3 == 1 ? nullptr : new Sword(force / 5);
@@ -604,12 +604,12 @@ public:
  * @brief Iceman 武士类。
  * 前进会损失生命值，增加武力值。
  */
-class Iceman : public Warrier {
+class Iceman : public Warrior {
 private:
     bool evenStep = true;
 
 public:
-    Iceman(int number, Headquarter* owner) : Warrier(number, owner, initialForce[2]) {
+    Iceman(int number, Headquarter* owner) : Warrior(number, owner, initialForce[2]) {
         life = initialLife[2];
         sword = number % 3 == 0 ? new Sword(force / 5) : nullptr;
         bomb = number % 3 == 1 ? new Bomb : nullptr;
@@ -641,7 +641,7 @@ public:
  * @brief Lion 武士类。
  * 当忠诚度不足时会逃跑。
  */
-class Lion : public Warrier {
+class Lion : public Warrior {
 private:
     /**
      * @brief 忠诚度。
@@ -657,7 +657,7 @@ private:
 
 public:
     Lion(int number, Headquarter* owner, double loyalty)
-        : Warrier(number, owner, initialForce[3]), loyalty(loyalty) {
+        : Warrior(number, owner, initialForce[3]), loyalty(loyalty) {
         life = initialLife[3];
     }
 
@@ -716,9 +716,9 @@ public:
  * @brief Wolf 武士类。
  * 战斗开始前会抢夺对方武器。
  */
-class Wolf : public Warrier {
+class Wolf : public Warrior {
 public:
-    Wolf(int number, Headquarter* owner) : Warrier(number, owner, initialForce[4]) {
+    Wolf(int number, Headquarter* owner) : Warrior(number, owner, initialForce[4]) {
         life = initialLife[4];
     }
 
@@ -727,7 +727,7 @@ public:
      * （函数名来自第三题，未更改。）
      * @param enemy 对方敌人。
      */
-    void requestArmaments(Warrier* enemy) {
+    void requestArmaments(Warrior* enemy) {
         // 只有当自己没有且对方有的时候拿走。
         if (!sword && enemy->checkArmament<Sword>()) {
             // 不同于上次，这次复制一个相同的对象，并让敌人的武器自己消亡
@@ -760,34 +760,34 @@ public:
      * @brief 武士生成器类。
      * 通过此类生成武士。
      */
-    class WarrierGenerator {
+    class WarriorGenerator {
     public:
         /**
          * @brief 武士生成函数对象。
          * 确定以如何顺序生成武士。
          */
-        const std::function<Warrier*(int, Headquarter*, int)> generateFunction;
+        const std::function<Warrior*(int, Headquarter*, int)> generateFunction;
 
         /**
          * @brief 武士生成器构造函数。
          * 使用函数对象（可为 Lambda 表达式）构造一个生成器。
          * 这个函数应接收 @c int, @c Headquarter*, @c int 三个参数，
          * 分别为要生成的武士编号、司令部指针和司令部的生命元数量。
-         * 返回一个 @c Warrier* 为生成的武士。
+         * 返回一个 @c Warrior* 为生成的武士。
          * @tparam T 函数对象类。
          * @param function 函数对象。
          */
         template <typename T>
-        WarrierGenerator(const T& function) : generateFunction(function) {}
+        WarriorGenerator(const T& function) : generateFunction(function) {}
 
         /**
          * @brief 执行武士生成过程。
          * 直接通过仿函数的形式生成武士。
          * @param headquarter 要生成武士的司令部。
-         * @return Warrier* 生成得到的武士。
+         * @return Warrior* 生成得到的武士。
          */
-        Warrier* operator()(Headquarter* headquarter) const;
-        ~WarrierGenerator() {}
+        Warrior* operator()(Headquarter* headquarter) const;
+        ~WarriorGenerator() {}
     };
 
 private:
@@ -801,7 +801,7 @@ private:
      * @brief 武士列表。
      * 以 武士编号 - 武士指针 的映射方式存储。
      */
-    std::map<int, Warrier*> warrierList;
+    std::map<int, Warrior*> warriorList;
 
     /**
      * @brief 司令部所拥有的生命元个数。
@@ -813,7 +813,7 @@ private:
      * @brief 司令部即将生成的武士编号。
      *
      */
-    int nextWarrierNumber = 1;
+    int nextWarriorNumber = 1;
 
     /**
      * @brief 标记司令部是否应停止生成武士。
@@ -831,43 +831,43 @@ private:
      * @brief 本司令部所使用的武士生成器。
      *
      */
-    const WarrierGenerator warrierGenerator;
+    const WarriorGenerator warriorGenerator;
 
     /**
      * @brief 向该司令部添加一名武士。
      *
-     * @param warrier 要被添加的武士。
+     * @param warrior 要被添加的武士。
      * @return int （弃用：当前同类型武士个数）
      */
-    int addWarrier(Warrier* warrier);
+    int addWarrior(Warrior* warrior);
 
     /**
      * @brief 从对面过来的敌方武士。
      * 若不存在，则为空。
      */
-    Warrier* arrivedEnemyWarrier = nullptr;
+    Warrior* arrivedEnemyWarrior = nullptr;
 
 public:
     /**
      * @brief 红方所用的武士生成器。
      *
      */
-    const static WarrierGenerator redGenerator;
+    const static WarriorGenerator redGenerator;
 
     /**
      * @brief 蓝方所用的武士生成器。
      *
      */
-    const static WarrierGenerator blueGenerator;
-    Headquarter(const std::string& name, int life, const WarrierGenerator warrierGenerator)
-        : name(name), life(life), warrierGenerator(warrierGenerator) {}
+    const static WarriorGenerator blueGenerator;
+    Headquarter(const std::string& name, int life, const WarriorGenerator warriorGenerator)
+        : name(name), life(life), warriorGenerator(warriorGenerator) {}
 
     /**
      * @brief 司令部的析构函数。
      * 需要释放所有武士。此过程也会释放武士所拥有的全部武器。
      */
     ~Headquarter() {
-        for (auto& i : warrierList) {
+        for (auto& i : warriorList) {
             delete i.second;
         }
     }
@@ -903,7 +903,7 @@ public:
      * @return int 武士个数。
      */
     int getNum() const {
-        return warrierList.size();
+        return warriorList.size();
     }
 
     /**
@@ -911,14 +911,14 @@ public:
      * 同时命令该武士消亡。
      * @param number 要移走的武士编号。
      */
-    void removeWarrier(int number);
+    void removeWarrior(int number);
 
     /**
      * @brief 令该司令部生成下一名武士。
      * 若生成符合规则，则添加到武士列表。
-     * @return Warrier*
+     * @return Warrior*
      */
-    Warrier* generateWarrier();
+    Warrior* generateWarrior();
 
     /**
      * @brief 检查本司令部的逃跑 Lion。
@@ -941,8 +941,8 @@ public:
      * @return true 到达后司令部便被摧毁。
      * @return false 到达后司令部未被摧毁。
      */
-    bool enemyArrived(Warrier* warrier) {
-        arrivedEnemyWarrier = warrier;
+    bool enemyArrived(Warrior* warrior) {
+        arrivedEnemyWarrior = warrior;
         enemyNum++;
         return enemyNum == 2;
     }
@@ -952,40 +952,40 @@ public:
      * 如果没有这个，会漏掉。
      */
     void printArrivedEnemyInfo() {
-        if (arrivedEnemyWarrier) {
-            Broadcast::output(BroadcastType::WarrierReport, arrivedEnemyWarrier->owner->getName(),
-                              ' ', arrivedEnemyWarrier->getName(), ' ',
-                              arrivedEnemyWarrier->getNumber(), " has ",
-                              arrivedEnemyWarrier->getArmamentDetail());
+        if (arrivedEnemyWarrior) {
+            Broadcast::output(BroadcastType::WarriorReport, arrivedEnemyWarrior->owner->getName(),
+                              ' ', arrivedEnemyWarrior->getName(), ' ',
+                              arrivedEnemyWarrior->getNumber(), " has ",
+                              arrivedEnemyWarrior->getArmamentDetail());
         }
     }
 };
 
-int Sword::attack(Warrier* enemy) {
+int Sword::attack(Warrior* enemy) {
     enemy->loseLife(force);
     force *= .8f;
     endurance = force;
     return 0;
 }
 
-int Bomb::attack(Warrier* enemy) {
+int Bomb::attack(Warrior* enemy) {
     enemy->loseLife(INFTY);
     endurance = 0;
     return INFTY;
 }
 
-int Arrow::attack(Warrier* enemy) {
+int Arrow::attack(Warrior* enemy) {
     enemy->loseLife(arrowForce);
     endurance--;
     return 0;
 }
 
-Warrier* Headquarter::WarrierGenerator::operator()(Headquarter* owner) const {
-    return generateFunction(owner->nextWarrierNumber, owner, owner->life);
+Warrior* Headquarter::WarriorGenerator::operator()(Headquarter* owner) const {
+    return generateFunction(owner->nextWarriorNumber, owner, owner->life);
 }
 
-const Headquarter::WarrierGenerator Headquarter::redGenerator = [](int no, Headquarter* owner,
-                                                                   int life) -> Warrier* {
+const Headquarter::WarriorGenerator Headquarter::redGenerator = [](int no, Headquarter* owner,
+                                                                   int life) -> Warrior* {
     switch (no % 5) {
         case 1: return new Iceman(no, owner);
         case 2: return new Lion(no, owner, life - initialLife[3]);
@@ -996,8 +996,8 @@ const Headquarter::WarrierGenerator Headquarter::redGenerator = [](int no, Headq
     return nullptr;
 };
 
-const Headquarter::WarrierGenerator Headquarter::blueGenerator = [](int no, Headquarter* owner,
-                                                                    int life) -> Warrier* {
+const Headquarter::WarriorGenerator Headquarter::blueGenerator = [](int no, Headquarter* owner,
+                                                                    int life) -> Warrior* {
     switch (no % 5) {
         case 1: return new Lion(no, owner, life - initialLife[3]);
         case 2: return new Dragon(no, owner, 1. * (life - initialLife[0]) / initialLife[0]);
@@ -1008,39 +1008,39 @@ const Headquarter::WarrierGenerator Headquarter::blueGenerator = [](int no, Head
     return nullptr;
 };
 
-int Headquarter::addWarrier(Warrier* warrier) {
-    warrierList.insert(std::pair<int, Warrier*>(nextWarrierNumber, warrier));
-    nextWarrierNumber++;
-    life -= warrier->getLife();
+int Headquarter::addWarrior(Warrior* warrior) {
+    warriorList.insert(std::pair<int, Warrior*>(nextWarriorNumber, warrior));
+    nextWarriorNumber++;
+    life -= warrior->getLife();
     return 0;
 }
 
-void Headquarter::removeWarrier(int number) {
-    delete warrierList[number];
-    warrierList.erase(number);
+void Headquarter::removeWarrior(int number) {
+    delete warriorList[number];
+    warriorList.erase(number);
 }
 
-Warrier* Headquarter::generateWarrier() {
+Warrior* Headquarter::generateWarrior() {
     // 尝试生成下一个武士
-    Warrier* next = warrierGenerator(this);
+    Warrior* next = warriorGenerator(this);
     // 若无法生成（生命元不足），则令其消亡
     if (next->getLife() > life) {
         delete next;
         // 此题要求等待
         return nullptr;
     }
-    addWarrier(next);
-    Broadcast::output(BroadcastType::WarrierBorn, name, ' ', next->getName(), ' ',
+    addWarrior(next);
+    Broadcast::output(BroadcastType::WarriorBorn, name, ' ', next->getName(), ' ',
                       next->getNumber(), " born", next->getBornLog());
     return next;
 }
 
 void Headquarter::checkEscapedLion() {
-    for (auto i = warrierList.begin(); i != warrierList.end();) {
+    for (auto i = warriorList.begin(); i != warriorList.end();) {
         // 若为 Lion 且应当逃跑，则移出列表并令其消亡
         if (typeid(*(i->second)) == typeid(Lion) && dynamic_cast<Lion*>(i->second)->isEscaping()) {
             Broadcast::output(BroadcastType::LionEscape, name, " lion ", i->first, " ran away");
-            warrierList.erase(i++);
+            warriorList.erase(i++);
         } else
             i++;
     }
@@ -1078,13 +1078,13 @@ private:
      * @brief 该城市所停留的红色武士。
      * 若不存在，则为空。
      */
-    Warrier* redWarrier = nullptr;
+    Warrior* redWarrior = nullptr;
 
     /**
      * @brief 该城市所停留的蓝色武士。
      * 若不存在，则为空。
      */
-    Warrier* blueWarrier = nullptr;
+    Warrior* blueWarrior = nullptr;
 
     /**
      * @brief 该城市所树立的旗帜。
@@ -1115,11 +1115,11 @@ private:
      * 用于战败后进行生命值转移。
      */
     void saveLionStatus() {
-        if (redWarrier && typeid(*redWarrier) == typeid(Lion)) {
-            dynamic_cast<Lion*>(redWarrier)->saveOriginalLife();
+        if (redWarrior && typeid(*redWarrior) == typeid(Lion)) {
+            dynamic_cast<Lion*>(redWarrior)->saveOriginalLife();
         }
-        if (blueWarrier && typeid(*blueWarrier) == typeid(Lion)) {
-            dynamic_cast<Lion*>(blueWarrier)->saveOriginalLife();
+        if (blueWarrior && typeid(*blueWarrior) == typeid(Lion)) {
+            dynamic_cast<Lion*>(blueWarrior)->saveOriginalLife();
         }
     }
 
@@ -1132,7 +1132,7 @@ private:
      * @return true 必死（应使用 Bomb）。
      * @return false 不应使用 Bomb。
      */
-    bool simulateBattle(const Warrier* me, const Warrier* enemy, bool isFirst) {
+    bool simulateBattle(const Warrior* me, const Warrior* enemy, bool isFirst) {
         if (isFirst) {
             // 若己方先攻击
             int myLife = me->getLife(), enemyLife = enemy->getLife();
@@ -1168,7 +1168,7 @@ private:
      * @param loser 失败者。
      * @param isCounterattack 是否为回击。
      */
-    void dealWithResult(Warrier* winner, Warrier* loser) {
+    void dealWithResult(Warrior* winner, Warrior* loser) {
         // 若 Wolf 获胜，拿走对方武器
         if (typeid(*winner) == typeid(Wolf)) {
             dynamic_cast<Wolf*>(winner)->requestArmaments(loser);
@@ -1179,7 +1179,7 @@ private:
             winner->addLife(std::max(0, dynamic_cast<Lion*>(loser)->getOriginalLife()));
         }
         // 将失败者移出所在司令部
-        loser->owner->removeWarrier(loser->getNumber());
+        loser->owner->removeWarrior(loser->getNumber());
         // 若 Dragon 获胜
         if (typeid(*winner) == typeid(Dragon)) {
             Dragon* dragon = dynamic_cast<Dragon*>(winner);
@@ -1200,25 +1200,25 @@ private:
      * @return false 战斗需继续。
      */
     bool checkResult(bool isPrecheck = false) {
-        if (redWarrier->isDied() && blueWarrier->isDied()) {
+        if (redWarrior->isDied() && blueWarrior->isDied()) {
             // 若双方皆死亡（这种情况只能发生在双方都被 Arrow 射死时）
-            redWarrier->owner->removeWarrier(redWarrier->getNumber());
-            redWarrier = nullptr;
-            blueWarrier->owner->removeWarrier(blueWarrier->getNumber());
-            blueWarrier = nullptr;
+            redWarrior->owner->removeWarrior(redWarrior->getNumber());
+            redWarrior = nullptr;
+            blueWarrior->owner->removeWarrior(blueWarrior->getNumber());
+            blueWarrior = nullptr;
             // lastWinner = Flag::Nothing;
             // 这种情况下不算发生一场战斗
             hasBattled = false;
             return true;
         }
-        if (redWarrier->isDied()) {
+        if (redWarrior->isDied()) {
             // 若红方非 Arrow 死亡
             if (!isPrecheck)
-                cachedLog.push(Broadcast::combineString("red ", redWarrier->getName(), ' ',
-                                                        redWarrier->getNumber(),
+                cachedLog.push(Broadcast::combineString("red ", redWarrior->getName(), ' ',
+                                                        redWarrior->getNumber(),
                                                         " was killed in city ", number));
-            dealWithResult(blueWarrier, redWarrier);
-            redWarrier = nullptr;
+            dealWithResult(blueWarrior, redWarrior);
+            redWarrior = nullptr;
             // 更换旗帜，若连胜两次
             if (lastWinner == Flag::Blue) {
                 if (flag != Flag::Blue)
@@ -1227,14 +1227,14 @@ private:
             }
             lastWinner = Flag::Blue;
             return true;
-        } else if (blueWarrier->isDied()) {
+        } else if (blueWarrior->isDied()) {
             // 若蓝方非 Arrow 死亡
             if (!isPrecheck)
-                cachedLog.push(Broadcast::combineString("blue ", blueWarrier->getName(), ' ',
-                                                        blueWarrier->getNumber(),
+                cachedLog.push(Broadcast::combineString("blue ", blueWarrior->getName(), ' ',
+                                                        blueWarrior->getNumber(),
                                                         " was killed in city ", number));
-            dealWithResult(redWarrier, blueWarrier);
-            blueWarrier = nullptr;
+            dealWithResult(redWarrior, blueWarrior);
+            blueWarrior = nullptr;
             // 更换旗帜，若连胜两次
             if (lastWinner == Flag::Red) {
                 if (flag != Flag::Red)
@@ -1253,22 +1253,22 @@ private:
      * 若 @c fromEast 参数为真，则该武士从东侧而来；
      * 否则该武士从西侧而来。
      * @param fromEast 是否从东侧前进而来。
-     * @param warrier 武士。
+     * @param warrior 武士。
      */
-    void arrivedFrom(bool fromEast, Warrier* warrier) {
+    void arrivedFrom(bool fromEast, Warrior* warrior) {
         // 如果是 Lion，需要减少忠诚度
-        if (typeid(*warrier) == typeid(Lion)) {
-            Lion* lion = dynamic_cast<Lion*>(warrier);
+        if (typeid(*warrior) == typeid(Lion)) {
+            Lion* lion = dynamic_cast<Lion*>(warrior);
             if (lion->isEscaping()) {
                 delete lion;
                 return;
             }
         }
         // 如果是 Iceman，需要减少生命值
-        if (typeid(*warrier) == typeid(Iceman)) {
-            dynamic_cast<Iceman*>(warrier)->stepDecrease();
+        if (typeid(*warrior) == typeid(Iceman)) {
+            dynamic_cast<Iceman*>(warrior)->stepDecrease();
         }
-        (fromEast ? blueWarrier : redWarrier) = warrier;
+        (fromEast ? blueWarrior : redWarrior) = warrior;
     }
 
     /**
@@ -1312,16 +1312,16 @@ private:
      *
      */
     void getElements() {
-        if (redWarrier && !blueWarrier) {
-            redWarrier->owner->addLife(elementNum);
-            Broadcast::output(BroadcastType::CollectElements, "red ", redWarrier->getName(), ' ',
-                              redWarrier->getNumber(), " earned ", elementNum,
+        if (redWarrior && !blueWarrior) {
+            redWarrior->owner->addLife(elementNum);
+            Broadcast::output(BroadcastType::CollectElements, "red ", redWarrior->getName(), ' ',
+                              redWarrior->getNumber(), " earned ", elementNum,
                               " elements for his headquarter");
             elementNum = 0;
-        } else if (blueWarrier && !redWarrier) {
-            blueWarrier->owner->addLife(elementNum);
-            Broadcast::output(BroadcastType::CollectElements, "blue ", blueWarrier->getName(), ' ',
-                              blueWarrier->getNumber(), " earned ", elementNum,
+        } else if (blueWarrior && !redWarrior) {
+            blueWarrior->owner->addLife(elementNum);
+            Broadcast::output(BroadcastType::CollectElements, "blue ", blueWarrior->getName(), ' ',
+                              blueWarrior->getNumber(), " earned ", elementNum,
                               " elements for his headquarter");
             elementNum = 0;
         }
@@ -1333,9 +1333,9 @@ private:
      */
     void marchToEast() {
         // 若本城市有红色武士且东侧有城市（非司令部）执行
-        if (redWarrier && eastCity) {
-            eastCity->arrivedFrom(false, redWarrier);
-            redWarrier = nullptr;
+        if (redWarrior && eastCity) {
+            eastCity->arrivedFrom(false, redWarrior);
+            redWarrior = nullptr;
         }
     }
 
@@ -1345,9 +1345,9 @@ private:
      */
     void marchToWest() {
         // 若本城市有蓝色武士且西侧有城市（非司令部）执行
-        if (blueWarrier && westCity) {
-            westCity->arrivedFrom(true, blueWarrier);
-            blueWarrier = nullptr;
+        if (blueWarrior && westCity) {
+            westCity->arrivedFrom(true, blueWarrior);
+            blueWarrior = nullptr;
         }
     }
 
@@ -1356,33 +1356,33 @@ private:
      *
      */
     void shootArrow() {
-        if (redWarrier && redWarrier->checkArmament<Arrow>() && eastCity && eastCity->blueWarrier) {
-            Armament* arrow = redWarrier->getArmament<Arrow>();
-            arrow->attack(eastCity->blueWarrier);
-            redWarrier->cleanArmaments();
-            if (eastCity->blueWarrier->isDied()) {
-                Broadcast::output(BroadcastType::ArrowShot, "red ", redWarrier->getName(), ' ',
-                                  redWarrier->getNumber(), " shot and killed blue ",
-                                  eastCity->blueWarrier->getName(), ' ',
-                                  eastCity->blueWarrier->getNumber());
+        if (redWarrior && redWarrior->checkArmament<Arrow>() && eastCity && eastCity->blueWarrior) {
+            Armament* arrow = redWarrior->getArmament<Arrow>();
+            arrow->attack(eastCity->blueWarrior);
+            redWarrior->cleanArmaments();
+            if (eastCity->blueWarrior->isDied()) {
+                Broadcast::output(BroadcastType::ArrowShot, "red ", redWarrior->getName(), ' ',
+                                  redWarrior->getNumber(), " shot and killed blue ",
+                                  eastCity->blueWarrior->getName(), ' ',
+                                  eastCity->blueWarrior->getNumber());
             } else {
-                Broadcast::output(BroadcastType::ArrowShot, "red ", redWarrier->getName(), ' ',
-                                  redWarrier->getNumber(), " shot");
+                Broadcast::output(BroadcastType::ArrowShot, "red ", redWarrior->getName(), ' ',
+                                  redWarrior->getNumber(), " shot");
             }
         }
-        if (blueWarrier && blueWarrier->checkArmament<Arrow>() && westCity &&
-            westCity->redWarrier) {
-            Armament* arrow = blueWarrier->getArmament<Arrow>();
-            arrow->attack(westCity->redWarrier);
-            blueWarrier->cleanArmaments();
-            if (westCity->redWarrier->isDied()) {
-                Broadcast::output(BroadcastType::ArrowShot, "blue ", blueWarrier->getName(), ' ',
-                                  blueWarrier->getNumber(), " shot and killed red ",
-                                  westCity->redWarrier->getName(), ' ',
-                                  westCity->redWarrier->getNumber());
+        if (blueWarrior && blueWarrior->checkArmament<Arrow>() && westCity &&
+            westCity->redWarrior) {
+            Armament* arrow = blueWarrior->getArmament<Arrow>();
+            arrow->attack(westCity->redWarrior);
+            blueWarrior->cleanArmaments();
+            if (westCity->redWarrior->isDied()) {
+                Broadcast::output(BroadcastType::ArrowShot, "blue ", blueWarrior->getName(), ' ',
+                                  blueWarrior->getNumber(), " shot and killed red ",
+                                  westCity->redWarrior->getName(), ' ',
+                                  westCity->redWarrior->getNumber());
             } else {
-                Broadcast::output(BroadcastType::ArrowShot, "blue ", blueWarrier->getName(), ' ',
-                                  blueWarrier->getNumber(), " shot");
+                Broadcast::output(BroadcastType::ArrowShot, "blue ", blueWarrior->getName(), ' ',
+                                  blueWarrior->getNumber(), " shot");
             }
         }
     }
@@ -1394,25 +1394,25 @@ private:
     void igniteBomb() {
         bool isRedFirst = (flag == Flag::Nothing ? number % 2 : flag == Flag::Red);
         // 检测 isDied 是因为可能被刚才的 Arrow 射死而不用 Bomb
-        if (redWarrier && !redWarrier->isDied() && blueWarrier && !blueWarrier->isDied()) {
-            if (redWarrier->checkArmament<Bomb>() &&
-                simulateBattle(redWarrier, blueWarrier, isRedFirst)) {
-                Broadcast::output(BroadcastType::BombUsed, "red ", redWarrier->getName(), ' ',
-                                  redWarrier->getNumber(), " used a bomb and killed blue ",
-                                  blueWarrier->getName(), ' ', blueWarrier->getNumber());
-                redWarrier->owner->removeWarrier(redWarrier->getNumber());
-                redWarrier = nullptr;
-                blueWarrier->owner->removeWarrier(blueWarrier->getNumber());
-                blueWarrier = nullptr;
-            } else if (blueWarrier->checkArmament<Bomb>() &&
-                       simulateBattle(blueWarrier, redWarrier, !isRedFirst)) {
-                Broadcast::output(BroadcastType::BombUsed, "blue ", blueWarrier->getName(), ' ',
-                                  blueWarrier->getNumber(), " used a bomb and killed red ",
-                                  redWarrier->getName(), ' ', redWarrier->getNumber());
-                blueWarrier->owner->removeWarrier(blueWarrier->getNumber());
-                blueWarrier = nullptr;
-                redWarrier->owner->removeWarrier(redWarrier->getNumber());
-                redWarrier = nullptr;
+        if (redWarrior && !redWarrior->isDied() && blueWarrior && !blueWarrior->isDied()) {
+            if (redWarrior->checkArmament<Bomb>() &&
+                simulateBattle(redWarrior, blueWarrior, isRedFirst)) {
+                Broadcast::output(BroadcastType::BombUsed, "red ", redWarrior->getName(), ' ',
+                                  redWarrior->getNumber(), " used a bomb and killed blue ",
+                                  blueWarrior->getName(), ' ', blueWarrior->getNumber());
+                redWarrior->owner->removeWarrior(redWarrior->getNumber());
+                redWarrior = nullptr;
+                blueWarrior->owner->removeWarrior(blueWarrior->getNumber());
+                blueWarrior = nullptr;
+            } else if (blueWarrior->checkArmament<Bomb>() &&
+                       simulateBattle(blueWarrior, redWarrior, !isRedFirst)) {
+                Broadcast::output(BroadcastType::BombUsed, "blue ", blueWarrior->getName(), ' ',
+                                  blueWarrior->getNumber(), " used a bomb and killed red ",
+                                  redWarrior->getName(), ' ', redWarrior->getNumber());
+                blueWarrior->owner->removeWarrior(blueWarrior->getNumber());
+                blueWarrior = nullptr;
+                redWarrior->owner->removeWarrior(redWarrior->getNumber());
+                redWarrior = nullptr;
             }
         }
     }
@@ -1425,23 +1425,23 @@ private:
         hasBattled = false;
         shouldFlagRaised = false;
         // 仅当双方武士见面时执行
-        if (!redWarrier || !blueWarrier) {
+        if (!redWarrior || !blueWarrior) {
             // 若之前被射死
-            if (redWarrier && redWarrier->isDied()) {
-                redWarrier->owner->removeWarrier(redWarrier->getNumber());
-                redWarrier = nullptr;
+            if (redWarrior && redWarrior->isDied()) {
+                redWarrior->owner->removeWarrior(redWarrior->getNumber());
+                redWarrior = nullptr;
             }
-            if (blueWarrier && blueWarrier->isDied()) {
-                blueWarrier->owner->removeWarrier(blueWarrier->getNumber());
-                blueWarrier = nullptr;
+            if (blueWarrior && blueWarrior->isDied()) {
+                blueWarrior->owner->removeWarrior(blueWarrior->getNumber());
+                blueWarrior = nullptr;
             }
             return;
         }
         hasBattled = true;
         // 配置好先后手
         bool isRedFirst = (flag == Flag::Nothing ? number % 2 : flag == Flag::Red);
-        Warrier* firstHand = isRedFirst ? redWarrier : blueWarrier;
-        Warrier* secondHand = isRedFirst ? blueWarrier : redWarrier;
+        Warrior* firstHand = isRedFirst ? redWarrior : blueWarrior;
+        Warrior* secondHand = isRedFirst ? blueWarrior : redWarrior;
         // 设置 Dragon 的欢呼属性
         if (typeid(*firstHand) == typeid(Dragon)) {
             dynamic_cast<Dragon*>(firstHand)->setYell(true);
@@ -1471,26 +1471,26 @@ private:
         if (checkResult())
             return;
         // 减少 Dragon 的士气
-        if (typeid(*redWarrier) == typeid(Dragon)) {
-            Dragon* dragon = dynamic_cast<Dragon*>(redWarrier);
+        if (typeid(*redWarrior) == typeid(Dragon)) {
+            Dragon* dragon = dynamic_cast<Dragon*>(redWarrior);
             dragon->decreaseMorale();
             if (dragon->shouldYell())
                 cachedLog.push(Broadcast::combineString("red dragon ", dragon->getNumber(),
                                                         " yelled in city ", number));
         }
-        if (typeid(*blueWarrier) == typeid(Dragon)) {
-            Dragon* dragon = dynamic_cast<Dragon*>(blueWarrier);
+        if (typeid(*blueWarrior) == typeid(Dragon)) {
+            Dragon* dragon = dynamic_cast<Dragon*>(blueWarrior);
             dragon->decreaseMorale();
             if (dragon->shouldYell())
                 cachedLog.push(Broadcast::combineString("blue dragon ", dragon->getNumber(),
                                                         " yelled in city ", number));
         }
         // 减少 Lion 的忠诚度
-        if (typeid(*redWarrier) == typeid(Lion)) {
-            dynamic_cast<Lion*>(redWarrier)->decreaseLoyalty();
+        if (typeid(*redWarrior) == typeid(Lion)) {
+            dynamic_cast<Lion*>(redWarrior)->decreaseLoyalty();
         }
-        if (typeid(*blueWarrier) == typeid(Lion)) {
-            dynamic_cast<Lion*>(blueWarrier)->decreaseLoyalty();
+        if (typeid(*blueWarrior) == typeid(Lion)) {
+            dynamic_cast<Lion*>(blueWarrior)->decreaseLoyalty();
         }
         lastWinner = Flag::Nothing;
     }
@@ -1500,14 +1500,14 @@ private:
      *
      * @param isRed 若报告红色武士，则为 @c true ；否则为 @c false
      */
-    void printWarrierInfo(bool isRed) {
-        if (isRed && redWarrier) {
-            Broadcast::output(BroadcastType::WarrierReport, "red ", redWarrier->getName(), ' ',
-                              redWarrier->getNumber(), " has ", redWarrier->getArmamentDetail());
+    void printWarriorInfo(bool isRed) {
+        if (isRed && redWarrior) {
+            Broadcast::output(BroadcastType::WarriorReport, "red ", redWarrior->getName(), ' ',
+                              redWarrior->getNumber(), " has ", redWarrior->getArmamentDetail());
         }
-        if (!isRed && blueWarrier) {
-            Broadcast::output(BroadcastType::WarrierReport, "blue ", blueWarrier->getName(), ' ',
-                              blueWarrier->getNumber(), " has ", blueWarrier->getArmamentDetail());
+        if (!isRed && blueWarrior) {
+            Broadcast::output(BroadcastType::WarriorReport, "blue ", blueWarrior->getName(), ' ',
+                              blueWarrior->getNumber(), " has ", blueWarrior->getArmamentDetail());
         }
     }
 
@@ -1518,15 +1518,15 @@ private:
      */
     void giveReward(bool isRed) {
         if (isRed && hasBattled && lastWinner == Flag::Red) {
-            if (redWarrier->owner->getLife() >= 8) {
-                redWarrier->addLife(8);
-                redWarrier->owner->reduceLife(8);
+            if (redWarrior->owner->getLife() >= 8) {
+                redWarrior->addLife(8);
+                redWarrior->owner->reduceLife(8);
             }
         }
         if (!isRed && hasBattled && lastWinner == Flag::Blue) {
-            if (blueWarrier->owner->getLife() >= 8) {
-                blueWarrier->addLife(8);
-                blueWarrier->owner->reduceLife(8);
+            if (blueWarrior->owner->getLife() >= 8) {
+                blueWarrior->addLife(8);
+                blueWarrior->owner->reduceLife(8);
             }
         }
     }
@@ -1537,21 +1537,21 @@ private:
      */
     void uploadElements() {
         // 双方都被 Bomb 炸死，则不收集生命元。
-        if (!redWarrier && !blueWarrier) {
+        if (!redWarrior && !blueWarrior) {
             return;
         }
         if (lastWinner == Flag::Red && elementNum > 0) {
             // 红方胜利，且有生命元
-            redWarrier->owner->addLife(elementNum);
-            cachedLog.push(Broadcast::combineString("red ", redWarrier->getName(), ' ',
-                                                    redWarrier->getNumber(), " earned ", elementNum,
+            redWarrior->owner->addLife(elementNum);
+            cachedLog.push(Broadcast::combineString("red ", redWarrior->getName(), ' ',
+                                                    redWarrior->getNumber(), " earned ", elementNum,
                                                     " elements for his headquarter"));
             elementNum = 0;
         } else if (lastWinner == Flag::Blue && elementNum > 0) {
             // 蓝方胜利，且有生命元
-            blueWarrier->owner->addLife(elementNum);
-            cachedLog.push(Broadcast::combineString("blue ", blueWarrier->getName(), ' ',
-                                                    blueWarrier->getNumber(), " earned ",
+            blueWarrior->owner->addLife(elementNum);
+            cachedLog.push(Broadcast::combineString("blue ", blueWarrior->getName(), ' ',
+                                                    blueWarrior->getNumber(), " earned ",
                                                     elementNum, " elements for his headquarter"));
             elementNum = 0;
         }
@@ -1576,44 +1576,44 @@ private:
      *
      */
     void printMarchResult() {
-        if (redWarrier) {
+        if (redWarrior) {
             if (!eastCity) {
                 // 若抵达司令部
-                Broadcast::output(BroadcastType::WarrierMarch, "red ", redWarrier->getName(), ' ',
-                                  redWarrier->getNumber(), " reached blue headquarter with ",
-                                  redWarrier->getLife(), " elements and force ",
-                                  redWarrier->getForce());
-                if (headquarter->enemyArrived(redWarrier)) {
-                    Broadcast::output(BroadcastType::WarrierMarch, "blue headquarter was taken");
+                Broadcast::output(BroadcastType::WarriorMarch, "red ", redWarrior->getName(), ' ',
+                                  redWarrior->getNumber(), " reached blue headquarter with ",
+                                  redWarrior->getLife(), " elements and force ",
+                                  redWarrior->getForce());
+                if (headquarter->enemyArrived(redWarrior)) {
+                    Broadcast::output(BroadcastType::WarriorMarch, "blue headquarter was taken");
                     // 游戏即将结束，调整输出时间限制到现在
-                    timeLimit = Broadcast::hour * 60 + int(BroadcastType::WarrierMarch);
+                    timeLimit = Broadcast::hour * 60 + int(BroadcastType::WarriorMarch);
                 }
-                redWarrier = nullptr;
+                redWarrior = nullptr;
             } else {
-                Broadcast::output(BroadcastType::WarrierMarch, "red ", redWarrier->getName(), ' ',
-                                  redWarrier->getNumber(), " marched to city ", number, " with ",
-                                  redWarrier->getLife(), " elements and force ",
-                                  redWarrier->getForce());
+                Broadcast::output(BroadcastType::WarriorMarch, "red ", redWarrior->getName(), ' ',
+                                  redWarrior->getNumber(), " marched to city ", number, " with ",
+                                  redWarrior->getLife(), " elements and force ",
+                                  redWarrior->getForce());
             }
         }
-        if (blueWarrier) {
+        if (blueWarrior) {
             if (!westCity) {
                 // 若抵达司令部
-                Broadcast::output(BroadcastType::WarrierMarch, "blue ", blueWarrier->getName(), ' ',
-                                  blueWarrier->getNumber(), " reached red headquarter with ",
-                                  blueWarrier->getLife(), " elements and force ",
-                                  blueWarrier->getForce());
-                if (headquarter->enemyArrived(blueWarrier)) {
-                    Broadcast::output(BroadcastType::WarrierMarch, "red headquarter was taken");
+                Broadcast::output(BroadcastType::WarriorMarch, "blue ", blueWarrior->getName(), ' ',
+                                  blueWarrior->getNumber(), " reached red headquarter with ",
+                                  blueWarrior->getLife(), " elements and force ",
+                                  blueWarrior->getForce());
+                if (headquarter->enemyArrived(blueWarrior)) {
+                    Broadcast::output(BroadcastType::WarriorMarch, "red headquarter was taken");
                     // 游戏即将结束，调整输出时间限制到现在
-                    timeLimit = Broadcast::hour * 60 + int(BroadcastType::WarrierMarch);
+                    timeLimit = Broadcast::hour * 60 + int(BroadcastType::WarriorMarch);
                 }
-                blueWarrier = nullptr;
+                blueWarrior = nullptr;
             } else {
-                Broadcast::output(BroadcastType::WarrierMarch, "blue ", blueWarrier->getName(), ' ',
-                                  blueWarrier->getNumber(), " marched to city ", number, " with ",
-                                  blueWarrier->getLife(), " elements and force ",
-                                  blueWarrier->getForce());
+                Broadcast::output(BroadcastType::WarriorMarch, "blue ", blueWarrior->getName(), ' ',
+                                  blueWarrior->getNumber(), " marched to city ", number, " with ",
+                                  blueWarrior->getLife(), " elements and force ",
+                                  blueWarrior->getForce());
             }
         }
     }
@@ -1672,19 +1672,19 @@ public:
     /**
      * @brief 向红方司令部城市添加一个武士。
      *
-     * @param warrier 武士。
+     * @param warrior 武士。
      */
-    void addRed(Warrier* warrier) {
-        westHead->redWarrier = warrier;
+    void addRed(Warrior* warrior) {
+        westHead->redWarrior = warrior;
     }
 
     /**
      * @brief 向蓝方司令部城市添加一个武士。
      *
-     * @param warrier 武士。
+     * @param warrior 武士。
      */
-    void addBlue(Warrier* warrier) {
-        eastHead->blueWarrier = warrier;
+    void addBlue(Warrior* warrior) {
+        eastHead->blueWarrior = warrior;
     }
 
     void generateAndGetElements() {
@@ -1796,11 +1796,11 @@ public:
      * @brief 令所有城市输出武士报告。
      *
      */
-    void printAllWarriersInfo() {
+    void printAllWarriorsInfo() {
         // 先报告红方
         City* current = westHead;
         while (current) {
-            current->printWarrierInfo(true);
+            current->printWarriorInfo(true);
             current = current->eastCity;
         }
         eastHead->headquarter->printArrivedEnemyInfo();
@@ -1808,7 +1808,7 @@ public:
         current = westHead;
         westHead->headquarter->printArrivedEnemyInfo();
         while (current) {
-            current->printWarrierInfo(false);
+            current->printWarriorInfo(false);
             current = current->eastCity;
         }
     }
@@ -1857,8 +1857,8 @@ int main() {
         std::cout << "Case " << j << ':' << std::endl;
         // 每一小时循环一次，直至到达时间限制
         for (WoW::Broadcast::hour = 0; !WoW::isOver; WoW::Broadcast::hour++) {
-            map.addRed(red.generateWarrier());
-            map.addBlue(blue.generateWarrier());
+            map.addRed(red.generateWarrior());
+            map.addBlue(blue.generateWarrior());
             red.checkEscapedLion();
             blue.checkEscapedLion();
             map.marchAll();
@@ -1869,7 +1869,7 @@ int main() {
             map.doElementsOperations();
             red.printInfo();
             blue.printInfo();
-            map.printAllWarriersInfo();
+            map.printAllWarriorsInfo();
         }
     }
     return 0;

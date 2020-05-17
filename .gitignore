@@ -43,3 +43,5 @@ temp.*
 temp/
 # TXT File in Root folder, used for I/O
 /*.txt
+# bits/stdc++.h
+/bits/stdc++.h

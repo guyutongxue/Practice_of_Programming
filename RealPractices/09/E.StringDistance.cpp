@@ -41,9 +41,9 @@ int main() {
         }
         for (int i = 1; i <= la; i++) {
             for (int j = 1; j <= lb; j++) {
-                f[i][j] = (a[i - 1] == b[j - 1]
-                               ? f[i - 1][j - 1]
-                               : min(min(f[i - 1][j - 1], f[i][j - 1]), f[i - 1][j]) + 1);
+                f[i][j] =
+                    (a[i - 1] == b[j - 1] ? f[i - 1][j - 1]
+                                          : min({f[i - 1][j - 1], f[i][j - 1], f[i - 1][j]}) + 1);
             }
         }
         // for (int i = 0; i <= la; i++) {

@@ -27,7 +27,7 @@ int main() {
     }
     int ans = 0;
     for (int i = 1; i <= n; i++) {
-        ans = max(ans, max(lis[i], lds[i]));
+        ans = max({ans, lis[i], lds[i]});
     }
     cout << ans << endl;
     return 0;

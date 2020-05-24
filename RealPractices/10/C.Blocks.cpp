@@ -11,41 +11,41 @@ using namespace std;
 
 /**
  * f: DP
- * [i: begin-pos][i: end-pos][j: an extra parameter, see below]
+ * [i: begin-pos][j: end-pos][k: an extra parameter, see below]
  * Returns:
- *     The maximum score when erasing all blocks from pos i to pos (i + j).
- *     There are j extra blocks in the right side of pos i,
- *     which has the same color as block in pos i.
+ *     The maximum score when erasing all blocks from pos i to pos (j + k).
+ *     There are k extra blocks in the right side of pos j,
+ *     which has the same color as block in pos j.
  *    ----+---+---+---+-------+---+---+---+-------+---+----
  *    ... | a | b | c |  ...  | x | x | x |  ...  | x | ...
  *    ----+---+---+---+-------+---+---+---+-------+---+----
  *          ^                   ^  \--------v--------/
- * position i          position i  j same color blocks
+ * position i          position j  k same color blocks
  *
  * Formula:
- * // Consider erasing block in pos i. There are two method to do:
- * // 1. Remove block i with that j blocks together.
- * //    This will remove (j + 1) blocks in the end of sequence.
- * // 2. If there exists blocks which has the same color as block i
- * //    at position k, as the figure below:
+ * // Consider erasing block in pos j. There are two method to do:
+ * // 1. Remove block j with that k blocks together.
+ * //    This will remove (k + 1) blocks in the end of sequence.
+ * // 2. If there exists blocks which has the same color as block j
+ * //    at position p, as the figure below:
  * // ----+---+-------+---+---+-------+---+---+---+---+-------+---+----
  * // ... | a |  ...  | x | d |  ...  | e | x | x | x |  ...  | x | ...
  * // ----+---+-------+---+---+-------+---+---+---+---+-------+---+----
  * //       ^           ^                   ^  \--------v--------/
- * //   pos i       pos k (same color)  pos i  j same color blocks
- * //    We can remove the blocks between pos (k + 1) from (i - 1),
+ * //   pos i       pos p (same color)  pos j  k same color blocks
+ * //    We can remove the blocks between pos (p + 1) from (j - 1),
  * //    then the problem turns into:
  * // ----+---+-------+---+---+---+---+-------+---+----
  * // ... | a |  ...  | x | x | x | x |  ...  | x | ...
  * // ----+---+-------+---+---+---+---+-------+---+----
  * //       ^           ^   ^  \--------v--------/
- * //       i           k   i  j same color blocks   (Here letters represent old pos)
+ * //       i           p   j  k same color blocks   (Here letters represent old pos)
  * //                      \------ now j+1 ------/
- * //     ...which can be described as f[i][k][j + 1].
+ * //     ...which can be described as f[i][p][k + 1].
  *
  * f[i][j][k] = max (
- *     f[i][j - 1][0] + (k + 1) * (k + 1),                // the first condition
- *     max [                                              // the second condition
+ *     f[i][j - 1][0] + (k + 1) * (k + 1),                // the first method
+ *     max [                                              // the second method
  *         f[p + 1][j - 1][0] + f[i][p][k + 1],
  *         for p from i to j - 1, requires a[p] == a[j]   // here a[i] is the color of pos i
  *     ]

@@ -8,6 +8,7 @@ struct Patient {
     int id;
     int priority;
     Patient(int a, int b) : id(a), priority(b) {}
+    // operator< is necessary for priority_queue
     bool operator<(const Patient& b) const {
         return priority == b.priority ? id > b.id : priority < b.priority;
     }

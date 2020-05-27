@@ -15,8 +15,9 @@ int main() {
               // either put or not put in hole #i. That's the meaning of 2 * f[i - 1]. But If we put
               // one which just make an m-continious-consequence, then the explosion happen. We want
               // to remove this condition. If it construct an m-continious-consequence, hole #(i -
-              // m), #(i - m + 1), ..., #i is full. So just consider hole #1 to #(i - m - 1), while
-              // f[i - m + 1] just store how many conditions there. So minus it is the final answer.
+              // m + 1), #(i - m + 2), ..., #i is full, and hole #(i - m) is empty. So just consider
+              // hole #1 to #(i - m - 1), while f[i - m + 1] just store how many conditions there.
+              // So minus it is the final answer.
             f[i] = 2 * f[i - 1] - f[i - m - 1];
     }
     cout << f[n] << endl;

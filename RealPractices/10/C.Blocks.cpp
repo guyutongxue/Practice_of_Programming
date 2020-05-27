@@ -40,7 +40,7 @@ using namespace std;
  * // ----+---+-------+---+---+---+---+-------+---+----
  * //       ^           ^   ^  \--------v--------/
  * //       i           p   j  k same color blocks   (Here letters represent old pos)
- * //                      \------ now j+1 ------/
+ * //                      \------ now k+1 ------/
  * //     ...which can be described as f[i][p][k + 1].
  *
  * f[i][j][k] = max (

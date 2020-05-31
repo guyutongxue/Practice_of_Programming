@@ -1,22 +1,24 @@
 // Bailian 4129, DFS + cut
 
-#include <cstdio>
-#include <string>
-#include <memory.h>
-#include <algorithm>
-#include <stdlib.h>
 #include <math.h>
+#include <memory.h>
+#include <stdlib.h>
+
+#include <algorithm>
+#include <cstdio>
 #include <iostream>
-#include<queue>
+#include <queue>
 #include <set>
+#include <string>
 using namespace std;
 
-int dp[10001][4];//0：放的时候两边都没放，1：放的时候左边已放，2：放的时候右边已放，3：放的时候两边都放了
+int dp
+    [10001]
+    [4];  // 0：放的时候两边都没放，1：放的时候左边已放，2：放的时候右边已放，3：放的时候两边都放了
 int a[10001], b[10001], c[10001];
 int n;
 
-int main()
-{
+int main() {
     scanf("%d", &n);
     for (int j = 1; j <= n; j++)
         scanf("%d", &a[j]);

@@ -1,25 +1,26 @@
 // BFS
 
-#include <cstdio>
-#include <string>
-#include <memory>
-#include <algorithm>
-#include <stdlib.h>
 #include <math.h>
+#include <stdlib.h>
+
+#include <algorithm>
+#include <cstdio>
 #include <iostream>
-#include<queue>
+#include <memory>
+#include <queue>
+#include <string>
 using namespace std;
 
-int m, n, k,ans;
+int m, n, k, ans;
 int map[25][25];
-int dir1[4] = { 0,0,1,-1 }, dir2[4] = { 1,-1,0,0 };
+int dir1[4] = {0, 0, 1, -1}, dir2[4] = {1, -1, 0, 0};
 
 struct node {
     int x, y;
     bool visited[105];
     int kind;
     node(int _x, int _y) {
-        x = _x,y=_y;
+        x = _x, y = _y;
         kind = 0;
     }
 };
@@ -43,8 +44,7 @@ void bfs() {
     }
 }
 
-int main()
-{
+int main() {
     scanf("%d%d%d", &m, &n, &k);
     for (int i = 1; i <= m; i++)
         for (int j = 1; j <= n; j++)

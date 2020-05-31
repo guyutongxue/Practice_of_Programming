@@ -1,26 +1,27 @@
-#include <cstdio>
-#include <string>
-#include <memory.h>
-#include <algorithm>
-#include <stdlib.h>
 #include <math.h>
+#include <memory.h>
+#include <stdlib.h>
+
+#include <algorithm>
+#include <cstdio>
 #include <iostream>
-#include<queue>
+#include <queue>
+#include <string>
 using namespace std;
 
 int info[105][2];
-int hon,sum,ans;
+int hon, sum, ans;
 
-int main()
-{
-    while (cin >> hon)
-    {
-        if (hon == -1)break;
+int main() {
+    while (cin >> hon) {
+        if (hon == -1)
+            break;
         sum = 0, ans = 0;
         int p = 1;
         while (1) {
             scanf("%d%d", &info[p][0], &info[p][1]);
-            if (info[p][0] == -1)break;
+            if (info[p][0] == -1)
+                break;
             sum++;
             p++;
         }

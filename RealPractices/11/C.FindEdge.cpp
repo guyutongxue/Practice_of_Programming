@@ -1,18 +1,19 @@
 // DFS
 
-#include <cstdio>
-#include <string>
-#include <memory.h>
-#include <algorithm>
-#include <stdlib.h>
 #include <math.h>
+#include <memory.h>
+#include <stdlib.h>
+
+#include <algorithm>
+#include <cstdio>
 #include <iostream>
-#include<queue>
+#include <queue>
+#include <string>
 using namespace std;
 
 int map[505][505];
 int r, c;
-int dir1[4] = { 0,0,1,-1 }, dir2[4] = { 1,-1,0,0 };
+int dir1[4] = {0, 0, 1, -1}, dir2[4] = {1, -1, 0, 0};
 int kept[505][505];
 
 void dfs(int x, int y) {
@@ -24,8 +25,7 @@ void dfs(int x, int y) {
     }
 }
 
-int main()
-{
+int main() {
     int t;
     scanf("%d", &t);
     while (t--) {
@@ -33,7 +33,7 @@ int main()
         memset(map, 0, sizeof(int) * 505 * 505);
         scanf("%d%d", &r, &c);
         char ch;
-        for(int i=1;i<=r;i++)
+        for (int i = 1; i <= r; i++)
             for (int j = 1; j <= c; j++) {
                 cin >> ch;
                 if (ch == 'O')
@@ -42,7 +42,7 @@ int main()
                     map[i][j] = 2;
             }
         for (int i = 1; i <= r; i++) {
-            if(map[i][1]==1&&kept[i][1]==0)
+            if (map[i][1] == 1 && kept[i][1] == 0)
                 dfs(i, 1);
             if (map[i][c] == 1 && kept[i][c] == 0)
                 dfs(i, c);
@@ -53,8 +53,7 @@ int main()
             if (map[r][i] == 1 && kept[r][i] == 0)
                 dfs(r, i);
         }
-        for (int i = 1; i <= r; i++)
-        {
+        for (int i = 1; i <= r; i++) {
             for (int j = 1; j <= c; j++) {
                 if (map[i][j] == 2)
                     printf("X");
@@ -62,11 +61,10 @@ int main()
                     printf("O");
                 else
                     printf("X");
-
             }
             printf("\n");
         }
-            printf("\n");
+        printf("\n");
     }
     return 0;
 }

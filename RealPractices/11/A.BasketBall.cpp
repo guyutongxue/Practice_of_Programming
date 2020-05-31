@@ -1,37 +1,34 @@
 // Enum
 
-
-#include <cstdio>
-#include <string>
-#include <memory>
-#include <algorithm>
-#include <stdlib.h>
 #include <math.h>
+#include <stdlib.h>
+
+#include <algorithm>
+#include <cstdio>
 #include <iostream>
+#include <memory>
+#include <string>
 using namespace std;
 
-int main()
-{
+int main() {
     int t;
     scanf("%d", &t);
     while (t--) {
         char info[5][5];
-        int point[5] = { 0 };
+        int point[5] = {0};
         for (int i = 1; i <= 4; i++)
-            for (int j = 1; j <= 4; j++)
-            {
+            for (int j = 1; j <= 4; j++) {
                 cin >> info[i][j];
-                if (j > i)
-                {
+                if (j > i) {
                     if (info[i][j] == 'W')
                         point[i]++;
                     else if (info[i][j] == 'L')
                         point[j]++;
                 }
             }
-        int notdefined[4][3],h=1;
-        for(int i=1;i<=3;i++)
-            for(int j=i+1;j<=4;j++)
+        int notdefined[4][3], h = 1;
+        for (int i = 1; i <= 3; i++)
+            for (int j = i + 1; j <= 4; j++)
                 if (info[i][j] == '?') {
                     if (i == 1)
                         point[1]++;
@@ -40,10 +37,10 @@ int main()
                     else if (point[j] > point[1])
                         point[j]++;
                     else
-                        notdefined[h][0] = i,notdefined[h][1]=j,notdefined[h++][2]=0;
+                        notdefined[h][0] = i, notdefined[h][1] = j, notdefined[h++][2] = 0;
                 }
         int _point[5], ans = 4;
-        for (int i = 1; i <=1<<(h-1); i++) {
+        for (int i = 1; i <= 1 << (h - 1); i++) {
             int tmp = 1;
             notdefined[1][2]++;
             while (notdefined[tmp][2] > 1) {

@@ -13,7 +13,8 @@ using namespace std;
 
 int map[505][505];
 int r, c;
-int dir1[4] = {0, 0, 1, -1}, dir2[4] = {1, -1, 0, 0};
+int dir1[4] = {0, 0, 1, -1};
+int dir2[4] = {1, -1, 0, 0};
 int kept[505][505];
 
 void dfs(int x, int y) {
@@ -27,7 +28,7 @@ void dfs(int x, int y) {
 
 int main() {
     int t;
-    scanf("%d", &t);
+    cin >> t;
     while (t--) {
         memset(kept, 0, sizeof(int) * 505 * 505);
         memset(map, 0, sizeof(int) * 505 * 505);

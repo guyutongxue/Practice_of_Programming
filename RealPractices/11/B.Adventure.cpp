@@ -1,61 +1,53 @@
 // BFS
 
-#include <math.h>
-#include <stdlib.h>
-
 #include <algorithm>
-#include <cstdio>
 #include <iostream>
-#include <memory>
 #include <queue>
-#include <string>
 using namespace std;
 
 int m, n, k, ans;
-int map[25][25];
-int dir1[4] = {0, 0, 1, -1}, dir2[4] = {1, -1, 0, 0};
+int map[25][25] = {};
 
-struct node {
+struct Node {
     int x, y;
-    bool visited[105];
-    int kind;
-    node(int _x, int _y) {
-        x = _x, y = _y;
-        kind = 0;
-    }
+    bool visited[105] = {};
+    int kind = 0;
+    Node(int x, int y) : x(x), y(y) {}
 };
-queue<node> all;
+queue<Node> q;
 
 void bfs() {
-    while (!all.empty()) {
-        node now = all.front();
-        all.pop();
+    int dx[4] = {0, 0, 1, -1};
+    int dy[4] = {1, -1, 0, 0};
+    while (!q.empty()) {
+        Node now = q.front();
+        q.pop();
         for (int i = 0; i < 4; i++) {
-            int xx = now.x + dir1[i], yy = now.y + dir2[i];
-            if (map[xx][yy] < 1 || now.visited[map[xx][yy]] == 1)
+            int newx = now.x + dx[i], newy = now.y + dy[i];
+            if (map[newx][newy] < 1 || now.visited[map[newx][newy]])
                 continue;
-            node newone(now);
-            newone.x = xx, newone.y = yy;
-            newone.visited[map[xx][yy]] = 1;
-            newone.kind++;
-            ans = max(ans, newone.kind);
-            all.push(newone);
+            Node curr = now;
+            curr.x = newx, curr.y = newy;
+            curr.visited[map[newx][newy]] = true;
+            curr.kind++;
+            ans = max(ans, curr.kind);
+            q.push(curr);
         }
     }
 }
 
 int main() {
-    scanf("%d%d%d", &m, &n, &k);
-    for (int i = 1; i <= m; i++)
-        for (int j = 1; j <= n; j++)
-            scanf("%d", &map[i][j]);
-    node origin(1, 1);
-    origin.kind = 1;
-    for (int i = 1; i <= k; i++)
-        origin.visited[i] = false;
-    origin.visited[map[1][1]] = 1;
-    all.push(origin);
+    cin >> m >> n >> k;
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            cin >> map[i][j];
+        }
+    }
+    Node root(1, 1);
+    root.kind = 1;
+    root.visited[map[1][1]] = true;
+    q.push(root);
     bfs();
-    printf("%d\n", ans);
+    cout << ans << endl;
     return 0;
 }

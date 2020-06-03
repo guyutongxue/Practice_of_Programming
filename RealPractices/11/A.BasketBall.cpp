@@ -1,31 +1,24 @@
 // Enum
 
-#include <math.h>
-#include <stdlib.h>
-
 #include <algorithm>
-#include <cstdio>
 #include <iostream>
-#include <memory>
-#include <string>
 using namespace std;
 
 int main() {
     int t;
-    scanf("%d", &t);
+    cin >> t;
     while (t--) {
-        char info[5][5];
-        int point[5] = {0};
-        for (int i = 1; i <= 4; i++)
-            for (int j = 1; j <= 4; j++) {
-                cin >> info[i][j];
-                if (j > i) {
-                    if (info[i][j] == 'W')
-                        point[i]++;
-                    else if (info[i][j] == 'L')
-                        point[j]++;
-                }
+        char info[6][6];
+        int point[6] = {};
+        for (int i = 1; i <= 4; i++) {
+            cin >> info[i];
+            for (int j = i + 1; j <= 4; j++) {
+                if (info[i][j] == 'W')
+                    point[i]++;
+                else if (info[i][j] == 'L')
+                    point[j]++;
             }
+        }
         int notdefined[4][3], h = 1;
         for (int i = 1; i <= 3; i++)
             for (int j = i + 1; j <= 4; j++)
@@ -39,7 +32,7 @@ int main() {
                     else
                         notdefined[h][0] = i, notdefined[h][1] = j, notdefined[h++][2] = 0;
                 }
-        int _point[5], ans = 4;
+        int newpoint[5], ans = 4;
         for (int i = 1; i <= 1 << (h - 1); i++) {
             int tmp = 1;
             notdefined[1][2]++;
@@ -49,20 +42,20 @@ int main() {
                 notdefined[tmp][2]++;
             }
             for (int j = 1; j <= 4; j++)
-                _point[j] = point[j];
+                newpoint[j] = point[j];
             for (int j = 1; j <= h - 1; j++) {
                 if (notdefined[j][2] == 1)
-                    _point[notdefined[j][0]]++;
+                    newpoint[notdefined[j][0]]++;
                 else
-                    _point[notdefined[j][1]]++;
+                    newpoint[notdefined[j][1]]++;
             }
-            int _ans = 1;
+            int newans = 1;
             for (int i = 2; i <= 4; i++)
-                if (_point[i] > _point[1])
-                    _ans++;
-            ans = min(_ans, ans);
+                if (newpoint[i] > newpoint[1])
+                    newans++;
+            ans = min(newans, ans);
         }
-        printf("%d\n", ans);
+        cout << ans;
     }
     return 0;
 }

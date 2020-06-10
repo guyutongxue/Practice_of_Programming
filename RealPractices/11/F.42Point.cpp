@@ -1,49 +1,50 @@
-// DP
+// 爷也抑郁了
 
-#include <math.h>
-#include <memory.h>
-#include <stdlib.h>
-
-#include <algorithm>
-#include <cstdio>
+#include <cstring>
 #include <iostream>
-#include <queue>
-#include <set>
-#include <string>
 using namespace std;
-
-set<int> dp[7][7];
-int num[7], n;
-
-int main() {
-    scanf("%d", &n);
-    for (int i = 1; i <= n; i++) {
-        scanf("%d", &num[i]);
-        dp[i][i].insert(num[i]);
-    }
-    int sum = 1;
-    for (int i = 2; i <= n; i++)
-        sum += i;
-    for (int _case = 1; _case <= sum; _case++) {
-        next_permutation(num, num + n);
-        for (int i = 2; i <= n; i++)
-            for (int j = 1; j <= n - i + 1; j++) {
-                for (int k = j; k <= j + i - 2; k++) {
-                    for (auto ii = dp[j][k].begin(); ii != dp[j][k].end(); ii++)
-                        for (auto jj = dp[k + 1][j + i - 1].begin();
-                             jj != dp[k + 1][j + i - 1].end(); jj++) {
-                            dp[j][j + i - 1].insert(*ii + *jj);
-                            dp[j][j + i - 1].insert(abs(*ii - *jj));
-                            dp[j][j + i - 1].insert(*ii * *jj);
-                            if (*jj != 0 && (*ii / (*jj) * (*jj)) == *ii)
-                                dp[j][j + i - 1].insert(*ii / (*jj));
-                        }
-                }
+int a[7], n;
+bool dfs(int* a, int len) {
+    if (len == 1 && a[1] == 42)
+        return true;
+    int b[7]{};
+    memset(b, 0, sizeof(b));
+    for (int i{1}; i < len; i++)
+        for (int j{i + 1}; j <= len; j++) {
+            int p{1};
+            for (int k{1}; k <= len; k++) {
+                if (k != i && k != j)
+                    b[p++] = a[k];
             }
+            b[p] = a[i] + a[j];
+            if (dfs(b, len - 1))
+                return true;
+            b[p] = a[i] * a[j];
+            if (dfs(b, len - 1))
+                return true;
+            b[p] = a[i] - a[j];
+            if (dfs(b, len - 1))
+                return true;
+            b[p] = a[j] - a[i];
+            if (dfs(b, len - 1))
+                return true;
+            if (a[j] != 0 && a[i] % a[j] == 0) {
+                b[p] = a[i] / a[j];
+                if (dfs(b, len - 1))
+                    return true;
+            }
+            if (a[i] != 0 && a[j] % a[i] == 0) {
+                b[p] = a[j] / a[i];
+                if (dfs(b, len - 1))
+                    return true;
+            }
+        }
+    return false;
+}
+int main() {
+    cin >> n;
+    for (int i = 1; i <= n; i++) {
+        cin >> a[i];
     }
-    if (dp[1][n].find(42) != dp[1][n].end())
-        printf("YES\n");
-    else
-        printf("NO\n");
-    return 0;
+    cout << (dfs(a, n) ? "YES" : "NO") << endl;
 }

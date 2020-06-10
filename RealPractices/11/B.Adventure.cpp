@@ -6,27 +6,27 @@
 using namespace std;
 
 int m, n, k, ans;
-int map[25][25] = {};
+int map[25][25]{};
 
 struct Node {
     int x, y;
-    bool visited[105] = {};
+    bool visited[105]{};
     int kind = 0;
-    Node(int x, int y) : x(x), y(y) {}
+    Node(int x, int y) : x{x}, y{y} {}
 };
 queue<Node> q;
 
 void bfs() {
-    int dx[4] = {0, 0, 1, -1};
-    int dy[4] = {1, -1, 0, 0};
+    int dx[4]{0, 0, 1, -1};
+    int dy[4]{1, -1, 0, 0};
     while (!q.empty()) {
-        Node now = q.front();
+        Node now{q.front()};
         q.pop();
         for (int i = 0; i < 4; i++) {
             int newx = now.x + dx[i], newy = now.y + dy[i];
             if (map[newx][newy] < 1 || now.visited[map[newx][newy]])
                 continue;
-            Node curr = now;
+            Node curr{now};
             curr.x = newx, curr.y = newy;
             curr.visited[map[newx][newy]] = true;
             curr.kind++;

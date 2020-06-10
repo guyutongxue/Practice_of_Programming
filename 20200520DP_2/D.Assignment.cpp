@@ -1,4 +1,4 @@
-// COPIED
+// blg15288 
 
 #include <algorithm>
 #include <cstring>

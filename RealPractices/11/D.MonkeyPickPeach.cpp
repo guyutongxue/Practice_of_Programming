@@ -1,41 +1,27 @@
-#include <math.h>
-#include <memory.h>
-#include <stdlib.h>
-
 #include <algorithm>
-#include <cstdio>
 #include <iostream>
-#include <queue>
-#include <string>
 using namespace std;
 
-int info[105][2];
-int hon, sum, ans;
+int bee[105]{};
+int peach[105]{};
 
 int main() {
-    while (cin >> hon) {
-        if (hon == -1)
-            break;
-        sum = 0, ans = 0;
-        int p = 1;
-        while (1) {
-            scanf("%d%d", &info[p][0], &info[p][1]);
-            if (info[p][0] == -1)
-                break;
-            sum++;
-            p++;
-        }
-        for (int i = 1; i <= sum; i++) {
-            int _hon = hon, peach = 0;
-            for (int j = i; j <= sum; j++) {
-                _hon -= info[j][1];
-                if (_hon < 0)
+    int hon{};
+    while (cin >> hon, hon != -1) {
+        int n{0};
+        for (;cin >> peach[n] >> bee[n], peach[n] != -1; n++)
+            ;
+        int ans{0};
+        for (int i{0}; i < n; i++) {
+            int current{hon}, res{0};
+            for (int j{i}; j < n; j++) {
+                current -= bee[j];
+                if (current < 0)
                     break;
-                peach += info[j][0];
+                res += peach[j];
             }
-            ans = max(ans, peach);
+            ans = max(ans, res);
         }
-        printf("%d\n", ans);
+        cout << ans << endl;
     }
-    return 0;
 }

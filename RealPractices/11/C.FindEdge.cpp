@@ -1,71 +1,51 @@
-// DFS
-
-#include <math.h>
-#include <memory.h>
-#include <stdlib.h>
-
-#include <algorithm>
-#include <cstdio>
+#include <cstring>
 #include <iostream>
-#include <queue>
-#include <string>
 using namespace std;
 
-int map[505][505];
+char map[505][505];
 int r, c;
-int dir1[4] = {0, 0, 1, -1};
-int dir2[4] = {1, -1, 0, 0};
-int kept[505][505];
-
+int dx[4]{0, 0, 1, -1};
+int dy[4]{1, -1, 0, 0};
 void dfs(int x, int y) {
-    kept[x][y] = 1;
-    for (int i = 0; i < 4; i++) {
-        int xx = x + dir1[i], yy = y + dir2[i];
-        if (kept[xx][yy] != 1 && map[xx][yy] == 1)
-            dfs(xx, yy);
+    map[x][y] = 'A';
+    for (int i{0}; i < 4; i++) {
+        int nx{x + dx[i]};
+        int ny{y + dy[i]};
+        if (nx >= 0 && nx < r && ny >= 0 && ny < c && map[nx][ny] == 'O')
+            dfs(nx, ny);
     }
 }
-
 int main() {
     int t;
     cin >> t;
     while (t--) {
-        memset(kept, 0, sizeof(int) * 505 * 505);
-        memset(map, 0, sizeof(int) * 505 * 505);
-        scanf("%d%d", &r, &c);
-        char ch;
-        for (int i = 1; i <= r; i++)
-            for (int j = 1; j <= c; j++) {
-                cin >> ch;
-                if (ch == 'O')
-                    map[i][j] = 1;
-                else
-                    map[i][j] = 2;
+        cin >> r >> c;
+        for (int i{0}; i < r; i++) {
+            for (int j{0}; j < c; j++) {
+                cin >> map[i][j];
             }
-        for (int i = 1; i <= r; i++) {
-            if (map[i][1] == 1 && kept[i][1] == 0)
-                dfs(i, 1);
-            if (map[i][c] == 1 && kept[i][c] == 0)
-                dfs(i, c);
         }
-        for (int i = 1; i <= c; i++) {
-            if (map[1][i] == 1 && kept[1][i] == 0)
-                dfs(1, i);
-            if (map[r][i] == 1 && kept[r][i] == 0)
-                dfs(r, i);
+        for (int i{0}; i < r; i++) {
+            if (map[i][0] == 'O')
+                dfs(i, 0);
+            if (map[i][c - 1] == 'O')
+                dfs(i, c - 1);
         }
-        for (int i = 1; i <= r; i++) {
-            for (int j = 1; j <= c; j++) {
-                if (map[i][j] == 2)
-                    printf("X");
-                else if (kept[i][j])
-                    printf("O");
+        for (int i{0}; i < c; i++) {
+            if (map[0][i] == 'O')
+                dfs(0, i);
+            if (map[r - 1][i] == 'O')
+                dfs(r - 1, i);
+        }
+        for (int i{0}; i < r; i++) {
+            for (int j{0}; j < c; j++) {
+                if (map[i][j] == 'A')
+                    cout << 'O';
                 else
-                    printf("X");
+                    cout << 'X';
             }
-            printf("\n");
+            cout << endl;
         }
-        printf("\n");
+        cout << endl;
     }
-    return 0;
 }

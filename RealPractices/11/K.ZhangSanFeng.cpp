@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-const double EPS = 1e-6;
+const double EPS{1e-6};
 vector<int> solution;
 
 inline bool isEqual(double a) {
@@ -18,7 +18,7 @@ bool dfs(double sum, int now, int left) {
         solution.push_back(left);
         return true;
     }
-    for (int i = now; i < left - 1; i++) {
+    for (int i{now}; i < left - 1; i++) {
         solution.push_back(i);
         if (dfs(sum + 1. / i, i, left - i))
             return true;

@@ -9,8 +9,8 @@ using namespace std;
  * f0, f1: DP
  * [i: length of sequence]
  * Returns:
- *     f0: Minimum changes to all-zero-seq (000.....0) with length i
- *     f1: Minimum changes to non-all-zero-seq (000....0111...1) with total length i
+ *     f0: Minimum changes of transforming to all-zero-seq (000.....0)
+ *     f1: Minimum changes of transforming to non-all-zero-seq (000....0111...1)
  *
  * Formula:
  * f0[i] =

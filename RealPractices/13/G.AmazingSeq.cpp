@@ -1,44 +1,38 @@
 #include <cstring>
 #include <iostream>
+#include <algorithm>
 using namespace std;
-int score[202][202];
-int N;
-int num[202];
+int f[202][202]{};
+int a[202]{};
 int main() {
-    int T;
-    scanf("%d", &T);
-    int T0 = T;
-    while (T--) {
-        memset(score, 1, sizeof(score));
-        memset(num, 0, sizeof(num));
-        int N;
-        scanf("%d", &N);  // cin >> N;
-        for (int i = 0; i < N; ++i) {
-            scanf("%d", &num[i]);  // cin >> num[i];
-            score[i][i] = 1;
+    int t;
+    cin >> t;
+    for (int cases{1}; cases <= t; cases++) {
+        memset(f, 0x7f, sizeof(f));
+        int n;
+        cin >> n;
+        for (int i{0}; i < n; i++) {
+            cin >> a[i];
+            f[i][i] = 1;
         }
-        for (int i = 0; i < N; ++i) {
-            for (int j = 0; j < i; ++j) {
-                score[i][j] = 0;
+        for (int i{0}; i < n; i++) {
+            for (int j{0}; j < i; j++) {
+                f[i][j] = 0;
             }
         }
-        for (int i = 0; i < N - 1; ++i) {
-            if (num[i] == num[i + 1])
-                score[i][i + 1] = 1;
-            else
-                score[i][i + 1] = 2;
+        for (int i{0}; i < n - 1; i++) {
+            f[i][i + 1] = (a[i] == a[i + 1] ? 1 : 2);
         }
-        for (int i = N - 2; i >= 0; --i) {
-            for (int j = i + 1; j < N; ++j) {
-                for (int k = i; k < j; ++k) {
-                    if (num[k] == num[j]) {
-                        score[i][j] = min(score[i][j], score[i][k] + score[k + 1][j - 1]);
+        for (int i{n - 2}; i >= 0; i--) {
+            for (int j{i + 1}; j < n; j++) {
+                for (int k{i}; k < j; k++) {
+                    if (a[k] == a[j]) {
+                        f[i][j] = min(f[i][j], f[i][k] + f[k + 1][j - 1]);
                     }
-                    score[i][j] = min(score[i][j], score[i][k] + score[k + 1][j]);
+                    f[i][j] = min(f[i][j], f[i][k] + f[k + 1][j]);
                 }
             }
         }
-        printf("Case %d: %d\n", T0 - T, score[0][N - 1]);
+        cout << "Case " << cases << ": " << f[0][n - 1] << endl;
     }
-    return 0;
 }

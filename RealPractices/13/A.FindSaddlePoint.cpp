@@ -20,7 +20,7 @@ int main() {
                 pt = i;
             }
         }
-        if (minimum == *std::max_element<int*>(*(a + pt), *(a + pt) + 5)) {
+        if (minimum == *std::max_element(*(a + pt), *(a + pt) + 5)) {
             cout << pt + 1 << " " << j + 1 << " " << minimum;
             return 0;
         }

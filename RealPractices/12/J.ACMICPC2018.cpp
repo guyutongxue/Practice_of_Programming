@@ -1,4 +1,4 @@
-// copied but wa
+// copied but tle
 
 #include <algorithm>
 #include <cstdio>
@@ -9,7 +9,7 @@ struct Node {
     int size, v;
 } P[30000];
 int A[100002], B[100002], tot = 0;
-inline void devide(int x) {
+void devide(int x) {
     int l = 1;
     while (l <= V[x]) {
         P[++tot].size = U[x] * l;
@@ -23,7 +23,7 @@ inline void devide(int x) {
     }
     return;
 }
-inline void devide2(int x) {
+void devide2(int x) {
     int l = 1;
     while (l <= Z[x]) {
         P[++tot].size = Y[x] * l;
@@ -38,42 +38,55 @@ inline void devide2(int x) {
     return;
 }
 int main() {
-    freopen("z.in", "r", stdin);
-    freopen("z.out", "w", stdout);
-    scanf("%d%d%d%d", &n, &m, &p, &k);
-    for (register int i = 1; i <= n; i++)
-        scanf("%d%d%d", &T[i], &U[i], &V[i]);
-    for (register int i = 1; i <= m; i++)
-        scanf("%d%d%d", &X[i], &Y[i], &Z[i]);
-    for (register int i = 1; i <= n; i++)
-        devide(i);
-    for (register int i = 1; i <= tot; i++) {
-        for (register int V = 100000; V >= P[i].size; V--) {
-            A[V] = std::max(A[V], A[V - P[i].size] + P[i].v);
+    int t;
+    scanf("%d", &t);
+    while (t--) {
+        k = 50000;
+        memset(T, 0, sizeof(T));
+        memset(U, 0, sizeof(U));
+        memset(V, 0, sizeof(V));
+        memset(X, 0, sizeof(X));
+        memset(Y, 0, sizeof(Y));
+        memset(Z, 0, sizeof(Z));
+        memset(P, 0, sizeof(P));
+        memset(A, 0, sizeof(A));
+        memset(B, 0, sizeof(B));
+        scanf("%d%d%d", &n, &m, &p);
+        for (int i = 1; i <= n; i++)
+            scanf("%d%d%d", &T[i], &U[i], &V[i]);
+        for (int i = 1; i <= m; i++)
+            scanf("%d%d%d", &X[i], &Y[i], &Z[i]);
+        for (int i = 1; i <= n; i++)
+            devide(i);
+        for (int i = 1; i <= tot; i++) {
+            for (int V = 100000; V >= P[i].size; V--) {
+                A[V] = std::max(A[V], A[V - P[i].size] + P[i].v);
+            }
         }
-    }
-    int ans1;
-    for (register int i = 1; i <= 100000; i++) {
-        if (A[i] >= p) {
-            ans1 = i;
-            printf("%d\n", i);
-            break;
+        int ans1;
+        for (int i = 1; i <= 100000; i++) {
+            if (A[i] >= p) {
+                ans1 = i;
+                // printf("%d\n", i);
+                break;
+            }
         }
-    }
-    tot = 0;
-    for (register int i = 1; i <= m; i++)
-        devide2(i);
-    for (register int i = 1; i <= tot; i++) {
-        for (register int V = 100000; V >= P[i].size; V--) {
-            B[V] = std::max(B[V], B[V - P[i].size] + P[i].v);
+        tot = 0;
+        for (int i = 1; i <= m; i++)
+            devide2(i);
+        for (int i = 1; i <= tot; i++) {
+            for (int V = 100000; V >= P[i].size; V--) {
+                B[V] = std::max(B[V], B[V - P[i].size] + P[i].v);
+            }
         }
-    }
-    for (register int i = 1; i <= k; i++) {
-        if (B[i] >= ans1) {
-            printf("%d\n", i);
-            return 0;
+        for (int i = 1; i <= k; i++) {
+            if (B[i] >= ans1) {
+                printf("%d\n", i);
+                goto next;
+            }
         }
+        puts("FAIL");
+    next:;
     }
-    puts("FAIL");
     return 0;
 }

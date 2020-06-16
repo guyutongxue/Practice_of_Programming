@@ -1,92 +1,79 @@
-// copied but tle
-
-#include <algorithm>
-#include <cstdio>
-#include <cstring>
-const int maxn = 300;
-int n, m, p, k, T[maxn], U[maxn], V[maxn], X[maxn], Y[maxn], Z[maxn];
-struct Node {
-    int size, v;
-} P[30000];
-int A[100002], B[100002], tot = 0;
-void devide(int x) {
-    int l = 1;
-    while (l <= V[x]) {
-        P[++tot].size = U[x] * l;
-        P[tot].v = T[x] * l;
-        V[x] -= l;
-        l <<= 1;
-    }
-    if (V[x]) {
-        P[++tot].size = U[x] * V[x];
-        P[tot].v = T[x] * V[x];
-    }
-    return;
-}
-void devide2(int x) {
-    int l = 1;
-    while (l <= Z[x]) {
-        P[++tot].size = Y[x] * l;
-        P[tot].v = X[x] * l;
-        Z[x] -= l;
-        l <<= 1;
-    }
-    if (Z[x]) {
-        P[++tot].size = Y[x] * Z[x];
-        P[tot].v = X[x] * Z[x];
-    }
-    return;
-}
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn{50007};
+int n, m, p, k;
+int t[maxn], u[maxn], numv[maxn];
+int vt[maxn], vu[maxn];
+int vx[maxn], vy[maxn], vz[maxn];
+int dp[maxn];
+int dp2[maxn];
+struct Point {
+    int x, y, z;
+};
+Point pp[maxn];
 int main() {
-    int t;
-    scanf("%d", &t);
-    while (t--) {
-        k = 50000;
-        memset(T, 0, sizeof(T));
-        memset(U, 0, sizeof(U));
-        memset(V, 0, sizeof(V));
-        memset(X, 0, sizeof(X));
-        memset(Y, 0, sizeof(Y));
-        memset(Z, 0, sizeof(Z));
-        memset(P, 0, sizeof(P));
-        memset(A, 0, sizeof(A));
-        memset(B, 0, sizeof(B));
+    int css;
+    cin >> css;
+    while (css--) {
         scanf("%d%d%d", &n, &m, &p);
-        for (int i = 1; i <= n; i++)
-            scanf("%d%d%d", &T[i], &U[i], &V[i]);
-        for (int i = 1; i <= m; i++)
-            scanf("%d%d%d", &X[i], &Y[i], &Z[i]);
-        for (int i = 1; i <= n; i++)
-            devide(i);
-        for (int i = 1; i <= tot; i++) {
-            for (int V = 100000; V >= P[i].size; V--) {
-                A[V] = std::max(A[V], A[V - P[i].size] + P[i].v);
+        k = 50000;
+        int cnt = 1;
+        for (int i = 1; i <= n; i++) {
+            scanf("%d%d%d", &t[i], &u[i], &numv[i]);
+            for (int j = 1; j <= numv[i]; j *= 2) {
+                vt[cnt] = t[i] * j;
+                vu[cnt++] = u[i] * j;
+                numv[i] -= j;
+            }
+            if (numv[i]) {
+                vt[cnt] = t[i] * numv[i];
+                vu[cnt++] = u[i] * numv[i];
             }
         }
-        int ans1;
-        for (int i = 1; i <= 100000; i++) {
-            if (A[i] >= p) {
+        memset(dp, 0, sizeof(dp));
+        memset(dp2, 0, sizeof(dp2));
+        for (int i = 1; i < cnt; i++) {
+            for (int j = 50020; j >= vu[i]; j--) {
+                dp[j] = max(dp[j], dp[j - vu[i]] + vt[i]);
+            }
+        }
+        cnt = 1;
+        for (int i = 1; i <= m; i++) {
+            scanf("%d%d%d", &pp[i].x, &pp[i].y, &pp[i].z);
+            for (int j = 1; j <= pp[i].z; j *= 2) {
+                vx[cnt] = pp[i].x * j;
+                vy[cnt++] = pp[i].y * j;
+                pp[i].z -= j;
+            }
+            if (pp[i].z > 0) {
+                vx[cnt] = pp[i].x * pp[i].z;
+                vy[cnt++] = pp[i].y * pp[i].z;
+            }
+        }
+        for (int i = 1; i < cnt; i++) {
+            for (int j = 50020; j >= vy[i]; j--) {
+                dp2[j] = max(dp2[j], dp2[j - vy[i]] + vx[i]);
+            }
+        }
+        // printf("%d\n",dp2[12]);
+        int ans1 = -1, ans2 = -1;
+        for (int i = 1; i <= 50020; i++) {
+            if (dp[i] >= p) {
                 ans1 = i;
-                // printf("%d\n", i);
                 break;
             }
         }
-        tot = 0;
-        for (int i = 1; i <= m; i++)
-            devide2(i);
-        for (int i = 1; i <= tot; i++) {
-            for (int V = 100000; V >= P[i].size; V--) {
-                B[V] = std::max(B[V], B[V - P[i].size] + P[i].v);
+        if (dp[k] < ans1) {
+            printf("FAIL\n");
+        } else {
+            for (int i = 1; i <= k; i++) {
+                if (dp2[i] >= ans1) {
+                    ans2 = i;
+                    break;
+                }
             }
+            printf("%d\n", ans2);
         }
-        for (int i = 1; i <= k; i++) {
-            if (B[i] >= ans1) {
-                printf("%d\n", i);
-                goto next;
-            }
-        }
-        puts("FAIL");
-    next:;
     }
-    return 0;
 }

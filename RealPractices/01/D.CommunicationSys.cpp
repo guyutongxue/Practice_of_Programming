@@ -1,6 +1,6 @@
 #include <algorithm>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <limits>
 using namespace std;
 constexpr int&& INF = std::numeric_limits<int>::max();
@@ -30,14 +30,14 @@ int main() {
                 } else {
                     // 之所以从0遍历到1200：
                     // 1. 预估带宽最大到1200
-                    // 2. 保证所有的带宽与对应的最小价格都被存到二维数组中,最后所求最小价格即为a[3][min带宽]
+                    // 2.
+                    // 保证所有的带宽与对应的最小价格都被存到二维数组中,最后所求最小价格即为a[3][min带宽]
                     for (int k = 0; k < 1100; k++) {
                         if (a[i - 1][k] != INF) {
                             if (k <= p)
                                 a[i][k] = min(a[i][k], a[i - 1][k] + q);
                             else
                                 a[i][p] = min(a[i][p], a[i - 1][k] + q);
-                            
                         }
                     }
                 }
@@ -46,11 +46,11 @@ int main() {
         double res = 0;
         for (int i = 0; i < 1100; i++) {
             if (a[m][i] != INF) {
-                double temp = 1.* i / a[m][i];
-                res = max(res,temp);
+                double temp = 1. * i / a[m][i];
+                res = max(res, temp);
             }
         }
-        cout<<fixed<<setprecision(3)<<res;
+        cout << fixed << setprecision(3) << res << endl;
     }
     return 0;
 }

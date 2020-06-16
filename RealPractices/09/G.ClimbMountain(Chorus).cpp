@@ -27,7 +27,11 @@ int main() {
     }
     int ans = 0;
     for (int i = 1; i <= n; i++) {
+#ifdef ONLINE_JUDGE  // OpenJudge 大傻逼
+        ans = max(ans, max(lis[i], lds[i]));
+#else
         ans = max({ans, lis[i], lds[i]});
+#endif
     }
     cout << ans << endl;
     return 0;

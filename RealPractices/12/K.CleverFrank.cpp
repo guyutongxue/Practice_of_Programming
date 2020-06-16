@@ -1,8 +1,5 @@
 // copied but wa
 
-#include <bits/stdc++.h>
-#include <memory.h>
-
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -47,14 +44,18 @@ inline void work(int x, int y) {
     ans = max(ans, tmp);
 }
 int main() {
-    scanf("%d%d%d", &n, &m, &L);
-    scanf("%d%d%d%d", &l, &r, &t, &b);
-    work(l, n - b);
-    work(l, t);
-    work(m - r, t);
-    work(m - r, n - b);
-    // if(ans==4725)cout<<2475;
-    // else cout<<ans;
-    cout << ans;
-    return 0;
+    int cs;
+    cin >> cs;
+    while (cs--) {
+        ans = 0;
+        scanf("%d%d%d", &n, &m, &L);
+        scanf("%d%d%d%d", &l, &r, &b, &t);
+        work(l, n - b);
+        work(l, t);
+        work(m - r, t);
+        work(m - r, n - b);
+        // if(ans==4725)cout<<2475;
+        // else cout<<ans;
+        cout << ans << endl;
+    }
 }

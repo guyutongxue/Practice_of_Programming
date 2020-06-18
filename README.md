@@ -4,7 +4,7 @@ Here stores the homework's source code or other stuff associated to my lesson "P
 
 <div style="font-size:250%;">
 
-## 此仓库或将停止更新。
+## 此仓库已停止更新。
 
 ## “两个凡是”
 

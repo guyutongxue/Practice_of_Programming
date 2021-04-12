@@ -231,7 +231,7 @@ int main(int argc, char** argv) {
         convertV52Info(&bitmapV5Header, &bitmapInfoHeader);
     }
     if (bitmapInfoHeader.biClrUsed) {
-        RGBQUAD* rgbQuad = (RGBQUAD*)malloc(bitmapInfoHeader.biClrUsed * sizeof(RGBQUAD));
+        RGBQUAD* rgbQuad = malloc(bitmapInfoHeader.biClrUsed * sizeof(RGBQUAD));
 
         fread(rgbQuad, sizeof(RGBQUAD), bitmapInfoHeader.biClrUsed, fin);
         puts("This program doesn't support under-24-bit image now.");
@@ -243,7 +243,7 @@ int main(int argc, char** argv) {
     fpos_t pixelArrayPos = bitmapFileHeader.bfOffBits;
     fsetpos(fin, &pixelArrayPos);
     if (bitmapInfoHeader.biBitCount == 24) {
-        RGBPixel* rgbPixel = (RGBPixel*)malloc(bitmapInfoHeader.biWidth *
+        RGBPixel* rgbPixel = malloc(bitmapInfoHeader.biWidth *
                                                bitmapInfoHeader.biHeight * sizeof(RGBPixel));
         int i, j, k;
         if (verbose)
@@ -317,7 +317,7 @@ int main(int argc, char** argv) {
 
         free(rgbPixel);
     } else if (bitmapInfoHeader.biBitCount == 32) {
-        RGBAPixel* rgbaPixel = (RGBAPixel*)malloc(bitmapInfoHeader.biWidth *
+        RGBAPixel* rgbaPixel = malloc(bitmapInfoHeader.biWidth *
                                                   bitmapInfoHeader.biHeight * sizeof(RGBAPixel));
         int i, j, k;
         if (verbose)

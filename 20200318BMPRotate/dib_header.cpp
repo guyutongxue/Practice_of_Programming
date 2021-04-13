@@ -73,9 +73,9 @@ public:
 
     bool write(std::ostream& ofs) {
         switch (type) {
-            case INFO: ofs.write(reinterpret_cast<char*>(&data), sizeof(BITMAPINFOHEADER));
-            case V4: ofs.write(reinterpret_cast<char*>(&data), sizeof(BITMAPV4HEADER));
-            case V5: ofs.write(reinterpret_cast<char*>(&data), sizeof(BITMAPV5HEADER));
+            case INFO: ofs.write(reinterpret_cast<char*>(&data), sizeof(BITMAPINFOHEADER)); break;
+            case V4: ofs.write(reinterpret_cast<char*>(&data), sizeof(BITMAPV4HEADER)); break;
+            case V5: ofs.write(reinterpret_cast<char*>(&data), sizeof(BITMAPV5HEADER)); break;
             default: throw std::runtime_error("Error type");
         }
         return static_cast<bool>(ofs);
